@@ -16,3 +16,12 @@ services:
       - "8080:8080"
     volumes:
       - ./backend:/app
+
+  mysqldb:
+    build: ./db
+    env_file:
+      - "./db/db.env"
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
