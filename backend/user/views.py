@@ -1,3 +1,6 @@
-from django.shortcuts import render
+from django.http import JsonResponse
+from rest_framework.decorators import api_view
+import jwt
 
-# Create your views here.
+def test(request):
+    return JsonResponse({"name" : "test"})

@@ -1,7 +1,7 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 
 # user/urls.py
 urlpatterns = [
-    path('', views.user)
+    path('', views.test)
 ]
