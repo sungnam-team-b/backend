@@ -1,0 +1,7 @@
+POST http://localhost:8000/practice/login/
+Content-Type: application/json
+
+{
+    "name":["asd123"],
+    "password":["123123"]
+}
