@@ -2,32 +2,24 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view
 import jwt
 
-from .userUtil import user_add, user_all
+from .userUtil import user_add, user_all, hash_pw, user_find_alias, user_find_email, user_find_id,user_find_name
 
 def test(request):
     return JsonResponse({"name" : "test"})
-
-@api_view(['GET'])
-def get_data(request):
-    input_value = request.GET.get('input')
-    return JsonResponse({"response":input_value})
-
-@api_view(['POST'])
-def post_data(request):
-    input_value = request.data['input']
-    return JsonResponse({"response":input_value})
 
 def jwtfuc(request):
     token = jwt.encode(payload={},key='asdf123',algorithm='HS256').decode('utf-8')
     return JsonResponse({"jwt": token})
 
 
-@api_view(['POST'])
+@api_view(['POST']) #로그인 구현
 def login(request):
     input_name = request.data['name']
     input_password = request.data['password']
+    if input_name and input_password:
+        user_data = user_find_name(input_name).first()
     token = jwt.encode(payload={"name":input_name},key='asd123',algorithm='HS256').decode('utf-8')
-    data = {"token" : token, "ID" : input_name}
+    data = {"token" : token, "your ID" : input_name}
     return JsonResponse({"data":data})
 
 @api_view(['POST'])
