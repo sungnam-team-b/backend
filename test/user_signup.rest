@@ -1,4 +1,4 @@
-POST http://localhost:8000/practice/signup/
+POST http://localhost:8080/practice/signup/
 Content-Type: application/json
 
 {
