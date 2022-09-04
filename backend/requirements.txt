@@ -8,3 +8,6 @@ djangorestframework-jwt==1.11.0
 cryptography==37.0.4
 PyMySQL==1.0.2
 mysqlclient==2.1.1
+
+#great api
+boto3
