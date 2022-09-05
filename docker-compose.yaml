@@ -4,6 +4,15 @@ volumes:
   mysql_data:
 
 services:
+  mysqldb:
+    build: ./db
+    env_file:
+      - "./db/db.env"
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
   backend:
     build: ./backend
     command: >
@@ -19,13 +28,3 @@ services:
       - mysqldb
     links:
       - mysqldb
-
-  mysqldb:
-    build: ./db
-    env_file:
-      - "./db/db.env"
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-
