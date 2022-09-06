@@ -11,7 +11,7 @@ class UserSignupResponse(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = user
-        fields = ['id', 'name', 'alias', 'password', 'email']
+        fields = ['id', 'username', 'alias', 'password', 'email']
 
 
 class AutoUpload(serializers.ModelSerializer):

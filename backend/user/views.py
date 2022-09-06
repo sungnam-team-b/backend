@@ -30,12 +30,12 @@ def login(request):
 
 @api_view(['POST'])
 def sign_up(request):
-    name = request.data['name']
+    username = request.data['username']
     password = request.data['password']
     email = request.data['email']
     alias = request.data['alias']
 
-    new_user = user_create_client(name, email, password, alias)
+    new_user = user_create_client(username, email, password, alias)
     data = UserSignupResponse(new_user, many=False).data
     return Response(data, status=200)
 
