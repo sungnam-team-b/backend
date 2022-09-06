@@ -40,9 +40,9 @@ def sign_up(request):
     return Response(data, status=200)
 
 
-@api_view(['GET'])
+@api_view(['GET']) #전체 내용 가져오기
 def get_all_mem(request):
-    respon = user_all().first() # 오브젝트의 꾸러미가 올때 제일 앞에만 가져온다!!
+    respon = user_all()
     result = {
         "name" : respon.username,
         "pw" : str(respon.password)
