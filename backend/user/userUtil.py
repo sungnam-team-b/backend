@@ -2,9 +2,9 @@ from .models import user
 import jwt
 import bcrypt
 
-def user_add(user_id,pw): 
+def user_add(name,pw): 
     password, salt = user_hash_password(pw)
-    user.objects.create(user_id=user_id, password= password, salt = salt)  #id, pw, salt각각
+    user.objects.create(name=name, password= password, salt = salt)  #id, pw, salt각각
     return "success"
 
 def user_all():

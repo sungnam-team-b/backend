@@ -6,6 +6,8 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 
+from .serializers import UserSignupResponse, AutoUpload
+
 from .userUtil import user_add, user_all, user_create_client, user_find_alias, user_find_email, user_find_id,user_find_name
 
 def test(request):
@@ -27,7 +29,7 @@ def login(request):
     return JsonResponse({"data":data})
 
 @api_view(['POST'])
-def user_sign_up(request):
+def sign_up(request):
     name = request.data['name']
     password = request.data['password']
     email = request.data['email']
