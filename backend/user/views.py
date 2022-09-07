@@ -44,7 +44,7 @@ def sign_up(request):
 def get_all_mem(request):
     respon = user_all()
     result = {
-        "name" : respon.username,
+        "username" : respon.username,
         "pw" : str(respon.password)
     }
     return JsonResponse(result)

@@ -8,7 +8,7 @@ def user_add(username,password):
     return "success"
 
 def user_all():
-    result = user.objects.all()
+    result = user.objects.get()
     return result
 
 def user_hash_password(password):
