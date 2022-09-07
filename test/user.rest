@@ -1,7 +1,2 @@
 GET http://localhost:8080/api/user/all/
 Content-Type: application/json
-
-{
-    "id": "1234",
-    "pw":"hello"
-}

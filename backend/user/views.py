@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 
 from .serializers import UserSignupResponse, AutoUpload
 
-from .userUtil import user_add, user_all, user_create_client, user_find_alias, user_find_email, user_find_id,user_find_name
+from .userUtil import user_add, user_get, user_create_client, user_find_alias, user_find_email, user_find_id,user_find_name
 
 def test(request):
     return JsonResponse({"name" : "test"})
@@ -42,9 +42,9 @@ def sign_up(request):
 
 @api_view(['GET']) #전체 내용 가져오기
 def get_all_mem(request):
-    respon = user_all()
+    respon = user_get()
     result = {
-        "username" : respon.username,
-        "pw" : str(respon.password)
+       "username" : respon.username,
     }
     return JsonResponse(result)
+

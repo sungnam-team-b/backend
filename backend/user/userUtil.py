@@ -7,10 +7,14 @@ def user_add(username,password):
     user.objects.create(username=username, password= password, salt = salt)  #id, pw, salt각각
     return "success"
 
-def user_all():
-    result = user.objects.get()
+
+def user_get():
+    result = user.objects.filter(
+        username=result.data['username']
+    )
     return result
 
+# password hashing
 def user_hash_password(password):
     password = str(password).encode('utf-8') # 해시하기 전에 인코딩을 먼저 해야된다!!
     salt = bcrypt.gensalt()
@@ -35,3 +39,8 @@ def user_find_email(email):
 def user_create_client(username, email, password, alias):
     hash_password, salt = user_hash_password(password)
     return user.objects.create(username=username, alias=alias, password=hash_password, salt=salt, email=email)
+
+def user_comppassword(password, user_data):
+    password = str(password).encode('utf-8')
+    hash_password = bcrypt.hashpw(password, user_data.salt)
+    return hash_password == user_data.password

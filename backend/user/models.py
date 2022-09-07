@@ -11,3 +11,6 @@ class user(models.Model):
     active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+class Meta:
+    db_table = 'member'
