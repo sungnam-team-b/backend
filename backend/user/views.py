@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 
 from .serializers import UserSignupResponse, AutoUpload
 
-from .userUtil import user_add, user_create_client, user_find_alias, user_find_email, user_find_id,user_find_name
+from .userUtil import user_create_client, user_find_alias, user_find_email, user_find_id,user_find_name
 
 def test(request):
     return JsonResponse({"name" : "test"})
@@ -17,16 +17,6 @@ def jwtfuc(request):
     token = jwt.encode(payload={},key='asdf123',algorithm='HS256').decode('utf-8')
     return JsonResponse({"jwt": token})
 
-
-@api_view(['POST']) #로그인 구현
-def login(request):
-    input_name = request.data['username']
-    input_password = request.data['password']
-    if input_name and input_password:
-        user_data = user_find_name(input_name).first()
-    token = jwt.encode(payload={"username":input_name},key='asd123',algorithm='HS256').decode('utf-8')
-    data = {"token" : token, "your ID" : input_name}
-    return JsonResponse({"data":data})
 
 @api_view(['POST'])
 def sign_up(request):
@@ -38,3 +28,21 @@ def sign_up(request):
     new_user = user_create_client(username, email, password, alias)
     data = UserSignupResponse(new_user, many=False).data
     return Response(data, status=200)
+
+@api_view(['POST']) #로그인 구현
+def login(request):
+    input_name = request.data['username']
+    input_password = request.data['password']
+    access_token = None
+    refresh_token = None
+
+    if input_password and input_name:
+        user_data = user_find_name(input_name).first()
+        if user_data:
+                newdata = str(input_name)
+        else:
+            return JsonResponse({"message": "invalid_data"}, status=400)
+
+    data = {"message":newdata}
+
+    return JsonResponse(data, status=200)
