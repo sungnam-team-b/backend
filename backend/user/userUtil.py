@@ -7,13 +7,6 @@ def user_add(username,password):
     user.objects.create(username=username, password= password, salt = salt)  #id, pw, salt각각
     return "success"
 
-
-def user_get():
-    result = user.objects.filter(
-        username=result.data['username']
-    )
-    return result
-
 # password hashing
 def user_hash_password(password):
     password = str(password).encode('utf-8') # 해시하기 전에 인코딩을 먼저 해야된다!!
