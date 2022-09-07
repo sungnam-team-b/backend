@@ -27,3 +27,8 @@ def user_find_email(email):
 def user_create_client(username, email, password, alias):
     hash_password, salt = user_hash_password(password)
     return user.objects.create(username=username, alias=alias, password=hash_password, salt=salt, email=email)
+
+def user_ispassword(password, user_data):
+    password = str(password).encode('utf-8')
+    hash_password = bcrypt.hashpw(password, user_data.salt)
+    return hash_password == user_data.password

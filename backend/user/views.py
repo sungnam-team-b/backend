@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 
 from .serializers import UserSignupResponse, AutoUpload
 
-from .userUtil import user_create_client, user_find_alias, user_find_email, user_find_id,user_find_name
+from .userUtil import user_create_client, user_find_alias, user_find_email, user_find_id,user_find_name, user_ispassword
 
 def test(request):
     return JsonResponse({"name" : "test"})
@@ -39,9 +39,12 @@ def login(request):
     if input_password and input_name:
         user_data = user_find_name(input_name).first()
         if user_data:
+            if user_ispassword(input_password, user_data):
                 newdata = str(input_name)
+            else: 
+                return JsonResponse({"message": "wrong password"}, status=400)
         else:
-            return JsonResponse({"message": "invalid_data"}, status=400)
+            return JsonResponse({"message": "user not exist"}, status=400)
 
     data = {"message":newdata}
 
