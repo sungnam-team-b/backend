@@ -17,8 +17,8 @@ environ.Env.read_env(
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
-SECRET_KEY = env('SECRET_KEY')
-DEBUG = env('DEBUG')
+SECRET_KEY=env('SECRET_KEY')
+DEBUG=env('DEBUG')
 
 ALLOWED_HOSTS = ['*']
 
