@@ -18,3 +18,4 @@ class AutoUpload(serializers.ModelSerializer):
     class Meta:
         model = user
         fields = ['autosave']
+
