@@ -19,7 +19,7 @@ class Great(models.Model):
         ordering = ['updated_at']
 
     def __str__(self):
-        return self.id,  self.name,  self.description,  self.great_url,  self.created_at, self.updated_at
+        return self.id+ ' ' + self.name+ ' ' +  self.description+ ' ' +  self.great_url+ ' ' +  self.created_at+ ' ' + self.updated_at
 
 class Picture(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -35,7 +35,7 @@ class Picture(models.Model):
         ordering = ['updated_at']
 
     def __str__(self):
-        return self.id,  self.similarity, self.created_at, self.updated_at
+        return self.id + ' ' +  self.similarity+ ' ' + self.created_at+ ' ' + self.updated_at
 
 
 class Result(models.Model):
@@ -54,7 +54,7 @@ class Result(models.Model):
         ordering = ['updated_at']
 
     def __str__(self):
-        return self.id,  self.similarity, self.created_at, self.updated_at
+        return self.id + ' ' + self.similarity + ' ' + self.created_at+ ' ' + self.updated_at
 
 
 
