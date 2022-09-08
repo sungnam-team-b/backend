@@ -1,5 +1,4 @@
 from django.http import JsonResponse
-from rest_framework.decorators import api_view
 import jwt
 
 from rest_framework.response import Response
@@ -7,7 +6,6 @@ from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 
 from .serializers import UserSignupResponse, AutoUpload
-
 from .userUtil import user_create_client, user_find_alias, user_find_email, user_find_id,user_find_name, user_ispassword
 
 def test(request):
