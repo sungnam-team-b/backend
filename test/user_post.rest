@@ -1,7 +1,0 @@
-POST http://localhost:8000/practice/signup/
-Content-Type: application/json
-
-{
-    "id": "1234",
-    "pw":"hello"
-}

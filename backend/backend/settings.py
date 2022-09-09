@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # add
     'rest_framework',
+    'drf_yasg',
     # apps
     'user'
 ]
@@ -76,6 +77,8 @@ DATABASES = {
     'default': env.db()
 }
 
+def test():
+    return env
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -101,7 +104,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 

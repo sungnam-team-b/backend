@@ -1,7 +1,2 @@
-GET http://localhost:8000/practice/all/
+GET http://localhost:8080/api/user/all/
 Content-Type: application/json
-
-{
-    "name":["asd123"],
-    "password":["123123"]
-}
