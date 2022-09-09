@@ -34,7 +34,7 @@ def login(request):
     access_token = None
     refresh_token = None
 
-    if input_password and input_name:
+    if input_password and input_name: #코드에 if문이 세 개... 프론트랑 얘기해서 이건 프론트에서 처리하도록!
         user_data = user_find_name(input_name).first()
         if user_data:
             if user_ispassword(input_password, user_data):
