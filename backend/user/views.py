@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 
 from .serializers import UserSignupResponse, AutoUpload
-from .userUtil import user_create_client, user_find_alias, user_find_email, user_find_id,user_find_name, user_ispassword
+from .userUtil import create_user, user_find_alias, user_find_email, user_find_id,user_find_name, user_ispassword
 
 def test(request):
     return JsonResponse({"name" : "test"})
@@ -23,9 +23,9 @@ def sign_up(request):
     email = request.data['email']
     alias = request.data['alias']
 
-    new_user = user_create_client(username, email, password, alias)
+    new_user = create_user(username, email, password, alias)
     data = UserSignupResponse(new_user, many=False).data
-    return Response(data, status=200)
+    return JsonResponse(data, status=200)
 
 @api_view(['POST']) #로그인 구현
 def login(request):
