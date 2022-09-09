@@ -19,6 +19,7 @@ environ.Env.read_env(
 
 SECRET_KEY = env('SECRET_KEY')
 DEBUG = env('DEBUG')
+
 JWT_SECRET_KEY = env('JWT_SECRET_KEY')
 ALGORITHM = env('ALGORITHM')
 

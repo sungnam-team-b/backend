@@ -1,19 +1,14 @@
 from django.http import JsonResponse
-import jwt
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 
-from .serializers import UserSignupResponse, AutoUpload
-from .userUtil import create_user, user_find_alias, user_find_email, user_find_id,user_find_name, user_ispassword
+from .serializers import UserSignupResponse
+from .userUtil import create_user, user_find_alias, user_find_email, user_find_id, user_find_name, user_ispassword, user_get_access_token, user_get_refresh_token
 
 def test(request):
     return JsonResponse({"name" : "test"})
-
-def jwtfuc(request):
-    token = jwt.encode(payload={},key='asdf123',algorithm='HS256').decode('utf-8')
-    return JsonResponse({"jwt": token})
 
 
 @api_view(['POST'])
@@ -38,12 +33,13 @@ def login(request):
         user_data = user_find_name(input_name).first()
         if user_data:
             if user_ispassword(input_password, user_data):
-                newdata = str(input_name)
+                access_token = user_get_access_token(user_data)
+                refresh_token = user_get_refresh_token(user_data)
             else: 
                 return JsonResponse({"message": "wrong password"}, status=400)
         else:
             return JsonResponse({"message": "user not exist"}, status=400)
 
-    data = {"message":newdata}
+    data = {"access_token": access_token, "refresh_token": refresh_token}
 
     return JsonResponse(data, status=200)

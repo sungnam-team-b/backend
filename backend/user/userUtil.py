@@ -36,36 +36,14 @@ def user_ispassword(password, user_data):
     return hash_password == user_data.password
 
 #tokens
-def user_token_to_data(token):
-    try:
-        payload = jwt.decode(token, JWT_SECRET_KEY, algorithms=ALGORITHM)
-    except jwt.exceptions.ExpiredSignatureError:
-        return "Expired_Token"
-    except jwt.exceptions.DecodeError:
-        return "Invalid_Token"
-    return payload
-
-
-def user_refresh_to_access(refresh_token):
-    try:
-        payload = jwt.decode(refresh_token, JWT_SECRET_KEY, algorithms=ALGORITHM)
-        access_token = jwt.encode(
-            {'id': payload.get('id'), 'username': payload.get('username'), 'alias': payload.get('alias'),
-             'email': payload.get('email'), 'type': "access_token",
-             'exp': datetime.utcnow() + timedelta(minutes=5)}, JWT_SECRET_KEY, ALGORITHM).decode('utf-8')
-    except jwt.exceptions.ExpiredSignatureError or jwt.exceptions.DecodeError:
-        return False
-    return access_token
-
-
-def user_generate_access_token(user_data):
+def user_get_access_token(user_data):
     return jwt.encode(
         {'id': str(user_data.id), 'alias': user_data.alias, 'exp': datetime.utcnow() + timedelta(minutes=30),
          'type': 'access_token'},
         JWT_SECRET_KEY, ALGORITHM).decode('utf-8')
 
 
-def user_generate_refresh_token(user_data):
+def user_get_refresh_token(user_data):
     return jwt.encode({'id': str(user_data.id), 'alias': user_data.alias, 'exp': datetime.utcnow() + timedelta(days=7),
                        'type': "refresh_token"},
                       JWT_SECRET_KEY, ALGORITHM).decode('utf-8')

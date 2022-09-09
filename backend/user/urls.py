@@ -4,7 +4,6 @@ from . import views
 # user/urls.py
 urlpatterns = [
     path('', views.test),
-    path('jwtfuc',views.jwtfuc),
     path('login',views.login),
     path('signup',views.sign_up)
 ]
