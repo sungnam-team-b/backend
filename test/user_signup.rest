@@ -1,9 +1,9 @@
-POST http://localhost:8080/v1/api/user/signup/
+POST http://localhost:8080/v1/api/user/signup
 Content-Type: application/json
 
 {
-    "username": "1234",
-    "password":"hello",
+    "username": "12345",
+    "password":"hello1",
     "email" :"1234@naver.com",
     "alias" : "hello4"
 }
