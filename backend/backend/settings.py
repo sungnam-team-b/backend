@@ -38,6 +38,9 @@ INSTALLED_APPS = [
     # add
     'rest_framework',
     'drf_yasg',
+    'django_celery_beat',
+    'django_celery_results',
+    'django_elasticsearch_dsl',
     # apps
     'user'
 ]

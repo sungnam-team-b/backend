@@ -28,3 +28,18 @@ services:
       - mysqldb
     links:
       - mysqldb
+
+  celery_worker:
+    container_name: celery_worker
+    build:
+      context: ./backend
+      dockerfile: dockerfile
+    volumes:
+      - ./backend:/backend
+    ports: []
+    depends_on:
+      - rabbitmq
+      - backend
+    environment:
+      - C_FORCE_ROOT=true
+    command: sh -c "celery -A backend worker --loglevel=info"
