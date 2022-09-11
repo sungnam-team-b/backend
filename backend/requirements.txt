@@ -10,7 +10,5 @@ PyMySQL==1.0.2
 mysqlclient==2.1.1
 drf-yasg==1.21.0
 
-#celery
-django_celery_beat
-django_celery_results
-celery
+#redis
+redis

@@ -38,9 +38,6 @@ INSTALLED_APPS = [
     # add
     'rest_framework',
     'drf_yasg',
-    'django_celery_beat',
-    'django_celery_results',
-    'django_elasticsearch_dsl',
     # apps
     'user'
 ]
@@ -126,3 +123,10 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': 'redis://redis:6379',
+    }
+}
