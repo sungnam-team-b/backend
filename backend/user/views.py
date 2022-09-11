@@ -7,6 +7,8 @@ from rest_framework.views import APIView
 from .serializers import UserSignupResponse
 from .userUtil import create_user, user_find_alias, user_find_email, user_find_id, user_find_name, user_ispassword, user_get_access_token, user_get_refresh_token
 
+from .redisUtilis import Red
+
 def test(request):
     return JsonResponse({"name" : "test"})
 
@@ -17,9 +19,16 @@ def sign_up(request):
     password = request.data['password']
     email = request.data['email']
     alias = request.data['alias']
-
+    
     new_user = create_user(username, email, password, alias)
-    data = UserSignupResponse(new_user, many=False).data
+
+    cache_data = Red.get(new_user)
+    if cache_data:
+        return cache_data
+    
+    outdata = Red.set(cache_data)
+    data = UserSignupResponse(outdata, many=False).data
+
     return JsonResponse(data, status=200)
 
 @api_view(['POST']) #로그인 구현
