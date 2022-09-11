@@ -47,24 +47,3 @@ def user_get_refresh_token(user_data):
     return jwt.encode({'id': str(user_data.id), 'alias': user_data.alias, 'exp': datetime.utcnow() + timedelta(days=7),
                        'type': "refresh_token"},
                       JWT_SECRET_KEY, ALGORITHM).decode('utf-8')
-
-                      class Auth(APIView):
-    def post(self, request):
-        token = request.headers.get('Authorization', None)
-        if token:
-            return user_reissuance_access_token(request)
-        else:
-            return login(request)
-
-
-def user_reissuance_access_token(request):
-    token = request.headers.get('Authorization', None)
-    payload = user_token_to_data(request.headers.get('Authorization', None))
-    if payload:
-        if payload.get('type') == 'refresh_token':
-            access_token = user_refresh_to_access(token)
-            return JsonResponse({"access_token": access_token}, status=200)  # new access_token 반환
-        else:
-            return JsonResponse({"message": "it is not refresh_token"}, status=401)
-    else:
-        return JsonResponse({"message": payload}, status=401)
