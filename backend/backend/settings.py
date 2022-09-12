@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     # add
     'rest_framework',
     # apps
-    'user'
+    'user',
     'great'
 ]
 
