@@ -1,11 +1,13 @@
 from django.db import models
 from user.models import user
+import uuid
 
 
 class picture(models.Model):
     id = models.AutoField(primary_key=True)
     user_id = models.ForeignKey(user, on_delete=models.CASCADE, db_column = 'user_id')
     picture_no = models.IntegerField(default=0)
+    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     picture_url = models.CharField(max_length=200)
     created_at = models.DateTimeField(auto_now_add=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True)
