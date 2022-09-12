@@ -15,7 +15,7 @@ def test(request):
 
 @api_view(['POST'])
 def sign_up(request):
-    if not cache.get("menu_data"):
+    if not cache.get("data"):
         username = request.data['username']
         password = request.data['password']
         email = request.data['email']
@@ -30,25 +30,28 @@ def sign_up(request):
 
 @api_view(['POST']) #로그인 구현
 def login(request):
-    input_name = request.data['username']
-    input_password = request.data['password']
-    access_token = None
-    refresh_token = None
+    if not cache.get("logindata"):
+        input_name = request.data['username']
+        input_password = request.data['password']
+        access_token = None
+        refresh_token = None
 
-    if input_password and input_name: #코드에 if문이 세 개... 프론트랑 얘기해서 이건 프론트에서 처리하도록!
-        user_data = user_find_name(input_name).first()
-        if user_data:
-            if user_ispassword(input_password, user_data):
-                access_token = user_get_access_token(user_data)
-                refresh_token = user_get_refresh_token(user_data)
-            else: 
-                return JsonResponse({"message": "wrong password"}, status=400)
-        else:
-            return JsonResponse({"message": "user not exist"}, status=400)
+        if input_password and input_name: #코드에 if문이 세 개... 프론트랑 얘기해서 이건 프론트에서 처리하도록!
+            user_data = user_find_name(input_name).first()
+            if user_data:
+                if user_ispassword(input_password, user_data):
+                    access_token = user_get_access_token(user_data)
+                    refresh_token = user_get_refresh_token(user_data)
+                else: 
+                    return JsonResponse({"message": "wrong password"}, status=400)
+            else:
+                return JsonResponse({"message": "user not exist"}, status=400)
 
-    data = {"access_token": access_token, "refresh_token": refresh_token}
+            logindata = {"access_token": access_token, "refresh_token": refresh_token}
+            logindata = cache.set("logindata", logindata)
+    logindata = cache.get("logindata")
 
-    return JsonResponse(data, status=200)
+    return JsonResponse(logindata, status=200)
 
 
 class Auth(APIView):
