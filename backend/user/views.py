@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from .serializers import UserSignupResponse
 from .userUtil import create_user, user_find_alias, user_find_email, user_find_id, user_find_name, user_ispassword, user_get_access_token, user_get_refresh_token
 
-from .redisUtilis import Red
+from django.core.cache    import cache
 
 def test(request):
     return JsonResponse({"name" : "test"})
@@ -15,13 +15,16 @@ def test(request):
 
 @api_view(['POST'])
 def sign_up(request):
-    username = request.data['username']
-    password = request.data['password']
-    email = request.data['email']
-    alias = request.data['alias']
+    if not cache.get("menu_data"):
+        username = request.data['username']
+        password = request.data['password']
+        email = request.data['email']
+        alias = request.data['alias']
     
-    new_user = create_user(username, email, password, alias)
-    data = UserSignupResponse(new_user, many=False).data
+        new_user = create_user(username, email, password, alias)
+        data = UserSignupResponse(new_user, many=False).data
+        data = cache.set("data", data)
+    data = cache.get("data")
 
     return JsonResponse(data, status=200)
 
