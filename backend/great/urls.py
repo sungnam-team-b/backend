@@ -3,5 +3,6 @@ from . import views
 
 # user/urls.py
 urlpatterns = [
-    path('', views.userview)
+    path('', views.greatview), # 기본
+    path('list/', views.list) #greatlist
 ]
