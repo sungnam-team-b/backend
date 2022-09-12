@@ -21,13 +21,7 @@ def sign_up(request):
     alias = request.data['alias']
     
     new_user = create_user(username, email, password, alias)
-
-    cache_data = Red.get(new_user)
-    if cache_data:
-        return cache_data
-    
-    outdata = Red.set(cache_data)
-    data = UserSignupResponse(outdata, many=False).data
+    data = UserSignupResponse(new_user, many=False).data
 
     return JsonResponse(data, status=200)
 
