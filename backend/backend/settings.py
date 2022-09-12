@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'rest_framework',
     # apps
     'user'
+    'great'
 ]
 
 MIDDLEWARE = [
@@ -74,6 +75,11 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': env.db()
+    # writer : jiwon
+    # 'default' : {
+    #     'ENGINE' : 'django.db.backends.mysql',
+    #     'NAME' : 'db이름'
+    # }
 }
 
 
