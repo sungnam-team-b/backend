@@ -2,6 +2,7 @@ from . models import picture, great, result
 from user.models import user
 import boto3
 from backend.settings import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
+from backend.settings import AWS_BUCKET_REGION, AWS_STORAGE_BUCKET_NAME
 
 from uuid import uuid4
 
@@ -20,7 +21,10 @@ from uuid import uuid4
 #     return image_url
 
 def s3_connection():
-    s3 = boto.client('s3',region_name = BUCKET_REGION, aws_access_key_id = AWS_ACCESS_KEY_ID, aws_secret_access_key = AWS_SECRET_ACCESS_KEY)
+    '''
+    s3 bucket에 연결하는 함수 
+    '''
+    s3 = boto.client('s3',region_name = AWS_BUCKET_REGION, aws_access_key_id = AWS_ACCESS_KEY_ID, aws_secret_access_key = AWS_SECRET_ACCESS_KEY)
     return s3
 
 def s3_put_object(s3, bucket, filepath, filename):
@@ -33,3 +37,9 @@ def s3_put_object(s3, bucket, filepath, filename):
         print(e)
         return False
     return True
+
+def s3_get_image_url(s3, filename : str):
+    '''
+    image url을 불러오는 함수 
+    '''
+    return f'https://{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_BUCKET_REGION}.amazonaws.com/{filename}'
