@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 
 from .serializers import UserSignupResponse
-from .userUtil import create_user, user_find_alias, user_find_email, user_find_id, user_find_name, user_ispassword, user_get_access_token, user_get_refresh_token
+from .userUtil import create_user, user_find_alias, user_find_email, user_find_id, user_find_name, user_ispassword, user_get_access_token, user_get_refresh_token, user_refresh_get_access
 
 from django.core.cache    import cache
 
@@ -68,10 +68,9 @@ def user_reaccess_token(request):
     payload = request.headers.get('Authorization')
     if payload:
         if payload.get('type') == 'refresh_token':
-            access_token = token
+            access_token = user_refresh_get_access(token)
             return JsonResponse({"access_token": access_token}, status=200)  # new access_token 반환
         else:
             return JsonResponse({"message": "it is not refresh_token"}, status=401)
     else:
         return JsonResponse({"message": payload}, status=401)
-
