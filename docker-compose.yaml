@@ -2,6 +2,7 @@ version: "3.8"
 
 volumes:
   mysql_data:
+  redisdata:
 
 services:
   mysqldb:
@@ -26,5 +27,15 @@ services:
       - ./backend:/app
     depends_on:
       - mysqldb
+      - redis
     links:
       - mysqldb
+
+  redis:
+    container_name: redis
+    image: redis:latest
+    hostname: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - 'redisdata:/data'
