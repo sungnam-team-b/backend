@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
-import jwt
 from .models import Great
+from .serializers import GreatlistResponse
+from rest_framework.response import Response
 
 def greatview(request):
     return JsonResponse({"id" : "test"})
@@ -20,13 +21,14 @@ def list(request):
 ###################### 2022-09-13 #########################
 #/api/v1/greats/greatslist
 #/api/v1/greats/task_status
-class greatslistAPI():
-    def greatList(self,request):
-        greats = Great.objects.filter(
-
-        )
-        return 
         
+@api_view(['GET'])
+def get_greatlist(request):
+    greatlist = Great.objects.all()
+    serializer = GreatlistResponse(greatlist, many=True)
+    return Response(serializer.data)
+    #return JsonResponse(logindata, status=200)
+
 
 # class TrashImageListAPI(APIView):
 #     def get(self, request, user_id, page_number):
