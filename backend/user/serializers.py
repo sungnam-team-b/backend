@@ -11,4 +11,4 @@ class UserSignupResponse(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = user
-        fields = ['id', 'username', 'alias', 'password', 'email']
+        fields = ['uuid_id', 'username', 'alias', 'password', 'email']
