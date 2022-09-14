@@ -43,7 +43,7 @@ def login(request):
                     access_token = user_get_access_token(user_data)
                     refresh_token = user_get_refresh_token(user_data)
                 else: 
-                    return JsonResponse({"message": "wrong password"}, status=400)
+                    return JsonResponse({"message": "user not exist"}, status=400)
             else:
                 return JsonResponse({"message": "user not exist"}, status=400)
 
