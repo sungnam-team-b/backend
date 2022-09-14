@@ -6,9 +6,3 @@ class GreatlistResponse(serializers.ModelSerializer):
     class Meta:
         model = Great
         fields = ['id', 'name','description','great_url']  # 프론트에주는 값
-
-
-# class UserSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Great
-#         fields = ['id', 'username', 'alias', 'password', 'email']
