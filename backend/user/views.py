@@ -7,8 +7,6 @@ from rest_framework.views import APIView
 from .serializers import UserSignupResponse
 from .userUtil import create_user, user_find_alias, user_find_email, user_find_id, user_find_name, user_ispassword, user_get_access_token, user_get_refresh_token, user_refresh_get_access, UserDuplicateCheck
 
-from django.core.cache  import cache
-
 def test(request):
     return JsonResponse({"name" : "test"})
 
@@ -21,16 +19,13 @@ def user(request):
         return sign_up(request)
     
 def sign_up(request):
-    if not cache.get("data"):
-        username = request.data['username']
-        password = request.data['password']
-        email = request.data['email']
-        alias = request.data['alias']
+    username = request.data['username']
+    password = request.data['password']
+    email = request.data['email']
+    alias = request.data['alias']
     
-        new_user = create_user(username, email, password, alias)
-        data = UserSignupResponse(new_user, many=False).data
-        data = cache.set("data", data)
-    data = cache.get("data")
+    new_user = create_user(username, email, password, alias)
+    data = UserSignupResponse(new_user, many=False).data
 
     return JsonResponse(data, status=201)
 
@@ -73,25 +68,22 @@ def user_reaccess_token(request):
 
 
 def login(request): #로그인 구현
-    if not cache.get("logindata"):
-        input_name = request.data['username']
-        input_password = request.data['password']
-        access_token = None
-        refresh_token = None
+    input_name = request.data['username']
+    input_password = request.data['password']
+    access_token = None
+    refresh_token = None
 
-        if input_password and input_name: #코드에 if문이 세 개... 프론트랑 얘기해서 이건 프론트에서 처리하도록!
-            user_data = user_find_name(input_name).first()
-            if user_data:
-                if user_ispassword(input_password, user_data):
-                    access_token = user_get_access_token(user_data)
-                    refresh_token = user_get_refresh_token(user_data)
-                else: 
-                    return JsonResponse({"message": "user not exist"}, status=400)
-            else:
+    if input_password and input_name: #코드에 if문이 세 개... 프론트랑 얘기해서 이건 프론트에서 처리하도록!
+        user_data = user_find_name(input_name).first()
+        if user_data:
+            if user_ispassword(input_password, user_data):
+                access_token = user_get_access_token(user_data)
+                refresh_token = user_get_refresh_token(user_data)
+            else: 
                 return JsonResponse({"message": "user not exist"}, status=400)
+        else:
+            return JsonResponse({"message": "user not exist"}, status=400)
 
-            logindata = {"access_token": access_token, "refresh_token": refresh_token}
-            logindata = cache.set("logindata", logindata)
-    logindata = cache.get("logindata")
+        logindata = {"access_token": access_token, "refresh_token": refresh_token}
 
     return JsonResponse(logindata, status=200)
