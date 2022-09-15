@@ -13,6 +13,6 @@ mysqlclient==2.1.1
 boto3
 
 #ai
-tensorflow
+keras-models
 numpy
 pillow
