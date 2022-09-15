@@ -3,7 +3,7 @@ Content-Type: application/json
 
 {
     "username": "12345",
-    "password":"hello1",
-    "email" :"1234@naver.com",
-    "alias" : "hello4"
+    "password":"hello",
+    "email" :"12345@naver.com",
+    "alias" : "hello"
 }

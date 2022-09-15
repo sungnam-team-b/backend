@@ -5,7 +5,8 @@ from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 
 from .serializers import UserSignupResponse
-from .userUtil import create_user, user_find_alias, user_find_email, user_find_id, user_find_name, user_ispassword, user_get_access_token, user_get_refresh_token, user_refresh_get_access, UserDuplicateCheck
+from .userUtil import create_user, user_find_name, user_ispassword, \
+    user_get_access_token, user_get_refresh_token, user_refresh_get_access, user_token_to_data, UserDuplicateCheck
 
 def test(request):
     return JsonResponse({"name" : "test"})
@@ -35,8 +36,8 @@ def is_duplicate(request):
     value = request.GET.get('value')
     checker = UserDuplicateCheck()
 
-    if case == 'name':
-        return JsonResponse({"result": checker.name(value)}, status=200)
+    if case == 'username':
+        return JsonResponse({"result": checker.username(value)}, status=200)
     elif case == 'alias':
         return JsonResponse({"result": checker.alias(value)}, status=200)
     elif case == 'email':
@@ -56,7 +57,7 @@ class Auth(APIView):
 
 def user_reaccess_token(request):
     token = request.headers.get('Authorization', None)
-    payload = request.headers.get('Authorization')
+    payload = user_token_to_data(request.headers.get('Authorization', None))
     if payload:
         if payload.get('type') == 'refresh_token':
             access_token = user_refresh_get_access(token)

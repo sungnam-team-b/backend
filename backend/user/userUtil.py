@@ -49,7 +49,7 @@ class UserDuplicateCheck:
         return True
 
     @staticmethod
-    def name(username):
+    def username(username):
         if user_find_name(username):
             return False
         return True
