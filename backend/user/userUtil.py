@@ -35,6 +35,25 @@ def user_ispassword(password, user_data):
     hash_password = bcrypt.hashpw(password, user_data.salt)
     return hash_password == user_data.password
 
+class UserDuplicateCheck:
+    @staticmethod
+    def alias(alias):
+        if user_find_alias(alias):
+            return False
+        return True
+
+    @staticmethod
+    def email(email):
+        if user_find_email(email):
+            return False
+        return True
+
+    @staticmethod
+    def name(username):
+        if user_find_name(username):
+            return False
+        return True
+
 #tokens
 def user_get_access_token(user_data):
     return jwt.encode(
