@@ -5,5 +5,6 @@ from . import views
 urlpatterns = [
     path('', views.greatview), # 기본
     path('list', views.list), #greatlist
-    path('greatlist', views.get_greatlist) #great모든 목록 조회
+    path('greatlist', views.get_greatlist), #great모든 목록 조회
+    path('ai',views.airesult)
 ]

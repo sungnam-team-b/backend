@@ -12,3 +12,11 @@ drf-yasg==1.21.0
 
 #redis
 django-redis
+
+#ai
+boto3
+keras-models
+numpy
+pillow
+tensorflow==2.10.0
+tensorflow-io==0.25.0
