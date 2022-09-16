@@ -9,8 +9,8 @@ class Great(models.Model):
     name = models.CharField(unique=True, max_length=200, null=True, blank=True)  #erd랑 다름
     description = models.CharField(max_length=200,default="")   #erd랑 다름
     great_url = models.CharField(max_length=200,default="")
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     class Meta:
         ordering = ['id']
@@ -25,9 +25,9 @@ class Great(models.Model):
 
 class Result(models.Model):
     id = models.IntegerField(primary_key=True)
-    similarity =models.FloatField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    similarity =models.FloatField(null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
     great = models.OneToOneField(Great, on_delete=models.CASCADE)
     
     #set user model foreignKey 
@@ -48,9 +48,9 @@ class Picture(models.Model):
     id = models.IntegerField(primary_key=True)
     picture_url = models.CharField(max_length=200,default="")
     #UUID = models.UUIDField(default=uuid.uuid4, editable=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    results = models.ForeignKey(Result, on_delete=models.CASCADE, db_column='result_id')#1:N
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
+    results = models.ForeignKey(Result, on_delete=models.CASCADE, db_column='result_id', null=True)#1:N
     
 
     class Meta:

@@ -5,18 +5,18 @@ from great.models import Picture, Result
 
 class user(models.Model):
     #id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    id = models.CharField(primary_key=True, editable=False, max_length=200)
+    id = models.IntegerField(primary_key=True, editable=False)
     username = models.CharField(unique=True, max_length=20, null=True, blank=True)
-    alias = models.CharField(unique=True, max_length=20)
-    password = models.BinaryField(max_length=60)
-    salt = models.BinaryField(max_length=29)
-    email = models.CharField(max_length=50)
-    active = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    alias = models.CharField(unique=True, max_length=20, null=True)
+    password = models.BinaryField(max_length=60, null=True)
+    salt = models.BinaryField(max_length=29, null=True)
+    email = models.CharField(max_length=50, null=True)
+    active = models.BooleanField(default=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
-    results = models.ForeignKey(Result, on_delete=models.CASCADE, db_column='result_id')
-    pictures = models.ForeignKey(Picture, on_delete=models.CASCADE, db_column='picture_id')
+    results = models.ForeignKey(Result, on_delete=models.CASCADE, db_column='result_id', null=True)
+    pictures = models.ForeignKey(Picture, on_delete=models.CASCADE, db_column='picture_id', null=True)
 
 class Meta:
     db_table = 'member'
