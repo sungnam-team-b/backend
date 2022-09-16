@@ -23,7 +23,7 @@ def get_greatlist(request):
 #마이페이지 
 @api_view(['GET'])
 def mypage(request,userId):
-    resultByUser = Result.objects.filter(userId=userId)
+    resultByUser = Result.objects.filter(user=userId)
     serializer = MyPageResponse(resultByUser, many=True)
     return Response(serializer.data)
     # if cache.get("logindata"):
