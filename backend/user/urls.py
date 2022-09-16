@@ -6,6 +6,6 @@ urlpatterns = [
     path('', views.test),
     path('login',views.login),
     path('signup',views.sign_up),
-    path('<str:userId>/mypage', views.mypage)
+    # path('<str:userId>/mypage', views.mypage)
     #path('<uuid:userId>/mypage', views.mypage)
 ]
