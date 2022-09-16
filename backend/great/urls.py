@@ -4,6 +4,6 @@ from . import views
 # user/urls.py
 urlpatterns = [
     path('', views.greatview), # 기본
-    path('list/', views.list), #greatlist
+    path('list', views.list), #greatlist
     path('greatlist', views.get_greatlist) #great모든 목록 조회
 ]
