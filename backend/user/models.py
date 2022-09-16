@@ -1,5 +1,7 @@
 from django.db import models
-import uuid 
+import uuid
+
+from great.models import Picture, Result 
 
 class user(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -11,6 +13,9 @@ class user(models.Model):
     active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    results = models.ForeignKey(Result, on_delete=models.CASCADE, db_column='result_id')
+    pictures = models.ForeignKey(Picture, on_delete=models.CASCADE, db_column='picture_id')
 
 class Meta:
     db_table = 'member'
