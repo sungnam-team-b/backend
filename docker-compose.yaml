@@ -32,6 +32,27 @@ services:
       - redis
     links:
       - mysqldb
+  
+  nginx:
+    image:
+      nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - .:/code
+      - ./nginx/nginx:/etc/nginx.conf.d
+    depends_on:
+      - web
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: gunicorn backend.wsqi.application --bind 0.0.0.0:8000
+    volumes:
+      - .:/code
+    expose:
+      - "8000"
+      
 
   redis:
     container_name: redis
