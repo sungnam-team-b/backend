@@ -60,19 +60,20 @@ def get_ai_result(filename):
         list2.append(prediction[0,i])
     list2.sort(reverse=True)
     list2 = list2[0:3]
-    for j in range(0,3):
-        for i in range(1,len(prediction[0])):
-            if(list1[i]==list2[j+1]):
-                rank.append(i)
-    # for i in range(1,len(prediction[0])):
-    #     if(list1[i]==list2[0]):
-    #         rank.append(i)
-    # for i in range(1,len(prediction[0])):
-    #     if(list1[i]==list2[1]):
-    #         rank.append(i)
-    # for i in range(1,len(prediction[0])):
-    #     if(list1[i]==list2[2]):
-    #         rank.append(i)
+    # for j in range(0,3):
+    #     for i in range(1,len(prediction[0])):
+    #         if(list1[i]==list2[j+1]):
+    #             rank.append(i)
+    for i in range(1,len(prediction[0])):
+        if(list1[i]==list2[0]):
+            rank.append(i)
+    for i in range(1,len(prediction[0])):
+        if(list1[i]==list2[1]):
+            rank.append(i)
+    for i in range(1,len(prediction[0])):
+        if(list1[i]==list2[2]):
+            rank.append(i)
+            
     great_dic = { name:value for name, value in zip(rank, list2) }
     return great_dic
 

@@ -47,11 +47,12 @@ def airesult(request):
     #s3 버킷에 업로드
     s3 = s3_connection()
     retPut = s3_put_object(
-        s3, AWS_STORAGE_BUCKET_NAME, 'temp/' + str(picuuid) + '.png', 'image/' + str(picuuid) + '.png')
+        s3, AWS_STORAGE_BUCKET_NAME, '/app/media/' + str(picuuid) + '.png', 'image/' + str(picuuid) + '.png')
     retGet = s3_get_image_url(s3, 'image/' + str(picuuid) + '.png') #s3 이미지 url
     result = get_ai_result(f'{picuuid}.png')
     print('##############')
+    print(retGet)
     print(result)
     print('##############')
 
-    return JsonResponse(result)
+    return JsonResponse({'test':'succes'})
