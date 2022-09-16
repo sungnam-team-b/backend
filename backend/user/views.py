@@ -53,8 +53,7 @@ def login(request):
 
     return JsonResponse(logindata, status=200)
 
-#마이페이지 구현
-#     
+
 
 
 class Auth(APIView):
