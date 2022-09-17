@@ -15,8 +15,5 @@ class user(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
-    results = models.ForeignKey(Result, on_delete=models.CASCADE, db_column='result_id', null=True)
-    pictures = models.ForeignKey(Picture, on_delete=models.CASCADE, db_column='picture_id', null=True)
-
 class Meta:
     db_table = 'member'
