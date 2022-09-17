@@ -37,6 +37,7 @@ def get_ai_result(filename):
     list1 = []
     list2 = []
     rank = []
+    animal_list = ['mouse','cow','tiger','rabbit','dragon','snake','horse','lamb','monkey','chicken','dog','pig']
     k=0
     #picture_id로 
     file_name = os.path.dirname(__file__) + '/model/keras_model.h5'
@@ -54,7 +55,7 @@ def get_ai_result(filename):
     normalized_image_array = (image_array.astype(np.float32) / 127.0) - 1
     data[0] = normalized_image_array
     prediction = model.predict(data)
-    print(prediction)
+    # print(prediction)
     for i in range(0,len(prediction[0])):
         list1.append(prediction[0,i])
         list2.append(prediction[0,i])
@@ -66,15 +67,18 @@ def get_ai_result(filename):
     #             rank.append(i)
     for i in range(1,len(prediction[0])):
         if(list1[i]==list2[0]):
-            rank.append(i)
+            rank.append(animal_list[i])
     for i in range(1,len(prediction[0])):
         if(list1[i]==list2[1]):
-            rank.append(i)
+            rank.append(animal_list[i])
     for i in range(1,len(prediction[0])):
         if(list1[i]==list2[2]):
-            rank.append(i)
+            rank.append(animal_list[i])
             
     great_dic = { name:value for name, value in zip(rank, list2) }
+    # print('################')
+    # print(great_dic)
+    # print('################')
     return great_dic
 
 def get_img_url(img):
