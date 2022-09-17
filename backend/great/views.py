@@ -21,12 +21,6 @@ def get_greatlist(request):
     serializer = GreatlistResponse(greatlist, many=True)
     return Response(serializer.data)
 
-# class mypage(View):
-#     def get(self, request, product_id):						
-#         if not Product.objects.filter(id=product_id).exists():
-#             return JsonResponse({'message': 'PRODUCT_DOES_NOT_EXIST'}, status=404)
-
-#         product = Product.objects.get(id=product_id)
 #마이페이지 
 @api_view(['GET'])
 def mypage(request, userId):
@@ -39,8 +33,6 @@ def mypage(request, userId):
     return Response(serializer.data)
     
     
-
-
     # if cache.get("logindata"):
     #     logindata = cache.get("logindata")
 
