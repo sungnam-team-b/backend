@@ -45,9 +45,6 @@ def is_duplicate(request):
     else:
         return JsonResponse({"message": "Invalid value"}, status=401)
 
-#마이페이지 구현
-#     
-
 
 class Auth(APIView):
     def post(self, request):
