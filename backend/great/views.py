@@ -30,9 +30,10 @@ def get_greatlist(request):
 #마이페이지 
 @api_view(['GET'])
 def mypage(request, userId):
-    print('userId:'+ str(userId) )
+    
     if not Result.objects.filter(user=userId).exists():
         return JsonResponse({userId: 'PRODUCT_DOES_NOT_EXIST'}, status=404)
+
     resultByUser = Result.objects.filter(user=userId)
     serializer = MyPageResponse(resultByUser, many=True)
     return Response(serializer.data)
