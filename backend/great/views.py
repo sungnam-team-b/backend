@@ -6,6 +6,7 @@ from .serializers import GreatlistResponse, MyPageResponse
 from rest_framework.response import Response
 from django.core.cache import cache
 import requests
+from user.models import user
 
 def greatview(request):
     return JsonResponse({"id" : "test"})
@@ -27,8 +28,11 @@ def mypage(request, userId):
     
     if not Result.objects.filter(user_id=userId).exists():
         return JsonResponse({userId: 'PRODUCT_DOES_NOT_EXIST'}, status=404)
+    
 
-    resultByUser = Result.objects.select_related('picture_id').filter(user_id=userId)
+    resultByUser = Result.objects.select_related('picture_id').filter(user_id=user.objects.get(id=userId))
+    #resultByUser = Result.objects.select_related('picture_id').filter(user_id=userId)
+    
     serializer = MyPageResponse(resultByUser, many=True)
     return Response(serializer.data)
     

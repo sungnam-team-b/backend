@@ -13,7 +13,7 @@ class GreatlistResponse(serializers.ModelSerializer):
 class PictureSerializer(serializers.ModelSerializer):
     class Meta:
         model =Picture
-        fields =['id','picture_url']
+        fields =['id','picture_url','user_id']
 
 
 
