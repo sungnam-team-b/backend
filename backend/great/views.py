@@ -1,3 +1,4 @@
+from re import X
 from django.shortcuts import render
 from django.http import JsonResponse
 from .models import Great, Picture, Result
@@ -6,7 +7,7 @@ from user.models import user
 from backend.settings import AWS_STORAGE_BUCKET_NAME
 from backend.settings import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
 
-from .utils import s3_connection, get_ai_result, s3_get_image_url, s3_put_object, get_animal_num
+from .utils import s3_connection, get_ai_result, s3_get_image_url, s3_put_object, get_animal_num, get_animal_name
 from .serializers import GreatlistResponse
 
 from rest_framework import status, viewsets
@@ -112,8 +113,30 @@ def airesult(request):
     os.remove(f'/app/media/{picuuid}.png')
     return JsonResponse(returnresult, status = 201)
 
-
-
+@api_view(['Get'])
+def ranking(request):
+    alist = []
+    blist = []
+    clist = []
+    returnrank = {}
+    today = datetime.today()
+    start_date = datetime(today.year, today.month, 1)
+    end_date = start_date + relativedelta(months = 1)
+    x = Result.objects.filter(created_at__range=(start_date, end_date)).order_by('-similarity')\
+        .values_list('great_id','user_id','similarity')
+    x = list(x[0:10])
+    a = Great.objects.get(id = x[0][0]).name
+    for i in range(0,10):
+        alist.append(Great.objects.get(id = x[i][0]).name) #alias
+        blist.append(user.objects.get(id = x[i][1]).alias) #animalname
+        clist.append(x[i][2]) #similarity
+    for i in range(10):
+        returnrank[i] = {}
+        returnrank[i]['alias'] = alist[i]
+        returnrank[i]['name'] = blist[i]
+        returnrank[i]['similarity'] = clist[i]
+    print(returnrank)
+    return JsonResponse(returnrank, status = 201)
 
 @api_view(['GET'])
 def addmodel(request):
@@ -154,3 +177,5 @@ def mypage(request, userId):
     #     #로그인 데이터가 없다면
     #     #로그인 페이지로 이동하도록
     
+
+
