@@ -23,6 +23,8 @@ class Great(models.Model):
     def __str__(self):
         return self.name+ ' ' +  self.description+ ' ' +  self.great_url+ ' ' +  self.created_at+ ' ' + self.updated_at
 
+    # def natural_key(self):
+    #     return (str(self.user),self)
 class Picture(models.Model):
     # user_id = models.ForeignKey(user, on_delete=models.CASCADE, db_column = 'user_id')
     user_id = models.ForeignKey( "user.user", on_delete=models.CASCADE, db_column='user_id', null=True)

@@ -10,3 +10,4 @@ urlpatterns = [
     path('user',views.airesult),
     path('models',views.addmodel) #test용 user 모델 추가
 ]
+

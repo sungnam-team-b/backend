@@ -11,4 +11,4 @@ class GreatlistResponse(serializers.ModelSerializer):
 # class RanklistSerializers(serializers.ModelSerializer):
 #     class Meta:
 #         model = result
-        # fields = 
+#         fields = 
