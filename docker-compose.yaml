@@ -21,8 +21,7 @@ services:
                python manage.py makemigrations &&
                python manage.py migrate &&
                python manage.py loaddata fixture.json &&
-
-               python manage.py runserver 0.0.0.0:8080" &&
+               gunicorn backend.wsgi:application --bind 0.0.0.0:8080" &&
                
     ports:
       - "8080:8080"
