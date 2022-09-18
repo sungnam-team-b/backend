@@ -102,7 +102,7 @@ def airesult(request):
     returnresult['result'] = data_convert
     returnresult['userimage'] = retGet
     returnresult['animalimage'] = s3_get_image_url(s3, 'animal/' + str(result1) + '.png')
-
+    os.remove(f'/app/media/{picuuid}.png')
     return JsonResponse(returnresult)
 
 
