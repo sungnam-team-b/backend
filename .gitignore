@@ -19,3 +19,4 @@ env/
 #DB
 data/
 db/db.env
+backend/great/migrations/0001_initial.py
