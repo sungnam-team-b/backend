@@ -6,6 +6,6 @@ urlpatterns = [
     path('', views.test),
     path('login',views.login),
     path('signup',views.sign_up),
-    
-    path('auth',views.Auth.as_view())
+    #09-18 merged
+    #path('auth',views.Auth.as_view())
 ]

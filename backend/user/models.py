@@ -9,6 +9,8 @@ class user(models.Model):
     id = models.IntegerField(primary_key=True, editable=False)
     username = models.CharField(unique=True, max_length=20, null=True, blank=True)
     alias = models.CharField(unique=True, max_length=20, null=True)
+    #09-18 merged
+    #null-Ture
     password = models.BinaryField(max_length=60, null=True)
     salt = models.BinaryField(max_length=29, null=True)
     email = models.CharField(max_length=50, null=True)
