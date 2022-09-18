@@ -4,7 +4,6 @@ import uuid
 from great.models import Picture, Result 
 
 class user(models.Model):
-    id = models.AutoField(primary_key=True)
     uuid_id = models.UUIDField(unique=True,default=uuid.uuid4, editable=False)
     username = models.CharField(unique=True, max_length=20, null=True, blank=True)
     alias = models.CharField(unique=True, max_length=20)
