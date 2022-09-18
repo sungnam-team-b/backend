@@ -178,4 +178,3 @@ def mypage(request, userId):
     #     #로그인 페이지로 이동하도록
     
 
-
