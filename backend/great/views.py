@@ -87,11 +87,16 @@ def airesult(request):
     #     great_id = Great.objects.get(id = ((get_animal_num(str(result3)))[0])['id']),\
     #         picture_id = Picture.objects.get(id = int((pictureid[0])['id'])),\
     #             similarity = float(result[f'{str(result3)}']))
-    ########
+    ################################
+    # Result.objects.create(user_id = user.objects.get(id = int(userid)),\
+    #     great_id = Great.objects.get(id = 123),\
+    #         picture_id = Picture.objects.get(id = int((pictureid[0])['id'])),\
+    #             similarity = float(result[f'{str(result1)}']))
+    ################################
     Result.objects.create(user_id = user.objects.get(id = int(userid)),\
         great_id = Great.objects.get(id = ((get_animal_num('abc'))[0])['id']),\
             picture_id = Picture.objects.get(id = int((pictureid[0])['id'])),\
-                similarity = float(result[f'{str(result1)}']))
+                similarity = float(result[f'{str(result1)}']))            
     Result.objects.create(user_id = user.objects.get(id = int(userid)),\
         great_id = Great.objects.get(id = ((get_animal_num('BTS'))[0])['id']),\
             picture_id = Picture.objects.get(id = int((pictureid[0])['id'])),\
