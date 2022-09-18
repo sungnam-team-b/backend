@@ -6,7 +6,7 @@ import uuid
 
 class Great(models.Model):
     name = models.CharField(unique=True, max_length=30, null=True, blank=True) 
-    description = models.CharField(max_length=200,default="")
+    description = models.CharField(max_length=1000,default="")
     great_url = models.CharField(max_length=200,default="")
     created_at = models.DateTimeField(auto_now_add=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True)
