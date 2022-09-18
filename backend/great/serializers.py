@@ -1,3 +1,4 @@
+from unittest import result
 from rest_framework import serializers
 from .models import Great
 
@@ -6,3 +7,8 @@ class GreatlistResponse(serializers.ModelSerializer):
     class Meta:
         model = Great
         fields = ['id', 'name','description','great_url']  # 프론트에주는 값
+
+# class RanklistSerializers(serializers.ModelSerializer):
+#     class Meta:
+#         model = result
+        # fields = 

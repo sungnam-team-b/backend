@@ -103,7 +103,9 @@ def airesult(request):
     returnresult['userimage'] = retGet
     returnresult['animalimage'] = s3_get_image_url(s3, 'animal/' + str(result1) + '.png')
     os.remove(f'/app/media/{picuuid}.png')
-    return JsonResponse(returnresult)
+    return JsonResponse(returnresult, status = 201)
+
+
 
 
 @api_view(['GET'])
