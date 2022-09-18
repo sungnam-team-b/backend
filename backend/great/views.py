@@ -2,7 +2,6 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from .models import Great, Picture, Result
 from user.models import user
-from .serializers import GreatlistResponse
 
 from backend.settings import AWS_STORAGE_BUCKET_NAME
 from backend.settings import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
@@ -11,9 +10,11 @@ from .utils import s3_connection, get_ai_result, s3_get_image_url, s3_put_object
 from .serializers import GreatlistResponse
 
 from rest_framework import status, viewsets
+from .serializers import GreatlistResponse, MyPageResponse
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
+import requests
 
 from django.shortcuts import render
 from django.conf import settings
@@ -32,6 +33,7 @@ def great_list(request):
     greats = Great.objects.all()
     return JsonResponse({"greats" : "greats"})
 
+#전체 great 조회 
 @api_view(['GET'])
 def get_greatlist(request):
     greatlist = Great.objects.all()
@@ -44,7 +46,7 @@ def airesult(request):
     picuuid = str(uuid4())
     file = request.FILES['filename']
     useruuid = request.POST['user_id'] #uuid로 모델에서 값 조회하는걸로 변경
-    userquery = user.objects.filter(uuid = useruuid).values()
+    userquery = user.objects.filter(uuid_id = useruuid).values()
     userid = (userquery[0])['id']
     fs = FileSystemStorage(location='media', base_url='media')
     filename = fs.save(picuuid+'.png', file)
@@ -67,8 +69,8 @@ def airesult(request):
     result3 = keys[2] # 세번째 key값
     a = get_animal_num('abc')
     print('#########')
-    print(int((pictureid[0])['id']))
-    print(a)
+    # print(int((pictureid[0])['id']))
+    print(userid)
     print('#########')
     data_convert = {k:float(v) for k,v in result.items()}
     
@@ -106,11 +108,55 @@ def airesult(request):
     return JsonResponse(returnresult, status = 201)
 
 
+@api_view(['GET'])
+def ranking(request):
+    today = datetime.today()
+    start_date = datetime(today.year, today.month, 1)
+    end_date = datetime(today.year, today.month, 1) + relativedelta(months =1)
+    ranking = Result.objects.filter(created_at__range=(start_date, end_date))
+    print('#########################')
+    print(ranking)
+    print('#########################')
+    return JsonResponse(ranking)
+    
 
 
 @api_view(['GET'])
 def addmodel(request):
-    user.objects.create(id =1,uuid=1,username='a',alias='a',password=1,salt =1)
+    user.objects.create(uuid_id=1,username='a',alias='a',password=1,salt =1)
     Great.objects.create(name = 'name')
 
     return JsonResponse({'test':'succes'})
+
+
+#마이페이지 
+@api_view(['GET'])
+def mypage(request, userId):
+    
+    if not Result.objects.filter(user_id=userId).exists():
+        return JsonResponse({userId: 'PRODUCT_DOES_NOT_EXIST'}, status=404)
+    
+
+    resultByUser = Result.objects.select_related('picture_id').filter(user_id=user.objects.get(id=userId))
+    #resultByUser = Result.objects.select_related('picture_id').filter(user_id=userId)
+    
+    serializer = MyPageResponse(resultByUser, many=True)
+    return Response(serializer.data)
+    
+    
+    # if cache.get("logindata"):
+    #     logindata = cache.get("logindata")
+
+    #     # access 토큰 확인?
+
+    #     #userId에 해당하는 result 데이터 조회
+    #     resultByUser = Result.objects.filter(userId=userId)
+    #     serializer = MyPageResponse(resultByUser, many=True)
+    #     return Response(serializer.data)
+
+        
+    # else:
+    #     return JsonResponse({"message": "access denined"}, status=401)
+    #     #로그인 데이터가 없다면
+    #     #로그인 페이지로 이동하도록
+    
