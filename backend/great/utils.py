@@ -42,8 +42,8 @@ def get_ai_result(filename):
     animal_list = ['mouse','cow','tiger','rabbit','dragon','snake','horse','lamb','monkey','chicken','dog','pig']
     k=0
     #picture_id로 
-    file_name = os.path.dirname(__file__) + '/model/keras_model.h5'
-    model = load_model(file_name)
+    model_path = os.path.dirname(__file__) + '/model/keras_model.h5'
+    model = load_model(model_path)
     data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
     # image = Image.open(f'app/media/{filename}')
     image = Image.open(f'/app/media/{filename}')

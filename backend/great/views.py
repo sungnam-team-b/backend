@@ -7,7 +7,7 @@ from user.models import user
 from backend.settings import AWS_STORAGE_BUCKET_NAME
 from backend.settings import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
 
-from .utils import s3_connection, get_ai_result, s3_get_image_url, s3_put_object, get_animal_num, get_animal_name
+from .utils import s3_connection, get_ai_result, s3_get_image_url, s3_put_object, get_animal_num
 from .serializers import GreatlistResponse
 
 from rest_framework import status, viewsets
