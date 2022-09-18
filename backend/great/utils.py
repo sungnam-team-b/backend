@@ -1,4 +1,5 @@
 from fileinput import filename
+from unicodedata import name
 from .models import Picture, Great, Result
 from user.models import user
 from keras.models import load_model
@@ -41,11 +42,7 @@ def get_ai_result(filename):
     k=0
     #picture_id로 
     file_name = os.path.dirname(__file__) + '/model/keras_model.h5'
-    print('##############')
-    print(file_name)
-    print('##############')
     model = load_model(file_name)
-
     data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
     # image = Image.open(f'app/media/{filename}')
     image = Image.open(f'/app/media/{filename}')
@@ -95,3 +92,7 @@ def get_img_url(img):
                 image_uuid + "." + image_type
     image_url = image_url.replace(" ", "/")
     return image_url
+
+def get_animal_num(animal):
+    animalnum = Great.objects.filter(name = animal).values('id')
+    return animalnum
