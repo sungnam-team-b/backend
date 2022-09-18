@@ -3,8 +3,9 @@ from . import views
 
 # user/urls.py
 urlpatterns = [
-    path('', views.user),
+    path('', views.test),
+    path('login',views.login),
+    path('signup',views.sign_up),
+    
     path('auth',views.Auth.as_view())
-    # path('<str:userId>/mypage', views.mypage)
-    #path('<uuid:userId>/mypage', views.mypage)
 ]
