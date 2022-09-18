@@ -37,6 +37,7 @@ def s3_get_image_url(s3, filename : str):
 def get_ai_result(filename):
     list1 = []
     list2 = []
+    list3 = []
     rank = []
     animal_list = ['mouse','cow','tiger','rabbit','dragon','snake','horse','lamb','monkey','chicken','dog','pig']
     k=0
@@ -71,11 +72,10 @@ def get_ai_result(filename):
     for i in range(1,len(prediction[0])):
         if(list1[i]==list2[2]):
             rank.append(animal_list[i])
-            
-    great_dic = { name:value for name, value in zip(rank, list2) }
-    # print('################')
-    # print(great_dic)
-    # print('################')
+    for i in list2:
+        j = i * 100
+        list3.append(round(j,1))
+    great_dic = { name:value for name, value in zip(rank, list3) }
     return great_dic
 
 def get_img_url(img):
