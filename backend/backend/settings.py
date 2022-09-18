@@ -23,7 +23,7 @@ DEBUG = env('DEBUG')
 JWT_SECRET_KEY = env('JWT_SECRET_KEY')
 ALGORITHM = env('ALGORITHM')
 
-ALLOWED_HOSTS = ['web']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     # add
     'rest_framework',
     'drf_yasg',
+    'corsheaders',
     # apps
     'user',
     'great'
@@ -51,7 +52,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
+
+CORS_ORIGIN_WHITELIST = ['http://127.0.0.1:3000', 'http://localhost:3000']
+CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = 'backend.urls'
 
@@ -79,11 +84,6 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': env.db()
-    # writer : jiwon
-    # 'default' : {
-    #     'ENGINE' : 'django.db.backends.mysql',
-    #     'NAME' : 'db이름'
-    # }
 }
 
 def test():
@@ -140,3 +140,29 @@ CACHES = {
         }
     }
 }
+
+
+###########################AWS
+AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
+AWS_BUCKET_REGION = env('AWS_BUCKET_REGION')
+AWS_QUERYSTRING_AUTH = False
+AWS_S3_SECURE_URLS = False 
+
+# APPEND_SLASH=False
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+
+
+###S3 Storages
+
+# AWS_S3_CUSTOM_DOMAIN = '%s.s3.%s.amazonaws.com' % (AWS_STORAGE_BUCKET_NAME,AWS_BUCKET_REGION)
+# AWS_S3_OBJECT_PARAMETERS = {
+#     'CacheControl': 'max-age=86400',
+# }
+# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'path/to/store/my/files/')
