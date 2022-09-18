@@ -20,8 +20,8 @@ services:
       bash -c "python wait_mysql.py &&
                python manage.py makemigrations &&
                python manage.py migrate &&
-               python manage.py loaddata fixture.json
-               python manage.py runserver 0.0.0.0:8080" &&
+               python manage.py loaddata fixture.json &&
+               gunicorn backend.wsgi:application --bind 0.0.0.0:8080" &&
                
     ports:
       - "8080:8080"
@@ -32,6 +32,15 @@ services:
       - redis
     links:
       - mysqldb
+  
+  nginx:
+    build: ./nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    depends_on:
+      - backend
 
   redis:
     container_name: redis
