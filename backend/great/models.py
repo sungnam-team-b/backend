@@ -20,8 +20,8 @@ class Great(models.Model):
         ordering = ['created_at']
         ordering = ['updated_at']
 
-    def __str__(self):
-        return self.name+ ' ' +  self.description+ ' ' +  self.great_url+ ' ' +  self.created_at+ ' ' + self.updated_at
+    # def __str__(self):
+    #     return self.name+ ' ' +  self.description+ ' ' +  self.great_url+ ' ' +  self.created_at+ ' ' + self.updated_at
 
 
 class Picture(models.Model):
@@ -63,5 +63,5 @@ class Result(models.Model):
         ordering = ['created_at']
         ordering = ['updated_at']
 
-    def __str__(self):
-        return self.user_id+ ' ' + self.great_id + ' ' + self.picture_id + ' ' + self.similarity + ' ' + self.created_at+ ' ' + self.updated_at
+    # def __str__(self):
+    #     return self.user_id + ' ' + self.great_id + ' ' + self.picture_id + ' ' + self.similarity + ' ' + self.created_at+ ' ' + self.updated_at
