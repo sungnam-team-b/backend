@@ -126,15 +126,16 @@ def ranking(request):
         .values_list('great_id','user_id','similarity')
     x = list(x[0:10])
     a = Great.objects.get(id = x[0][0]).name
-    for i in range(0,10):
+    for i in range(0,len(x)):
         alist.append(Great.objects.get(id = x[i][0]).name) #alias
         blist.append(user.objects.get(id = x[i][1]).alias) #animalname
         clist.append(x[i][2]) #similarity
-    for i in range(10):
+    for i in range(len(alist)):
         returnrank[i] = {}
         returnrank[i]['alias'] = alist[i]
         returnrank[i]['name'] = blist[i]
         returnrank[i]['similarity'] = clist[i]
+        returnrank[i]['rank'] = i
     print(returnrank)
     return JsonResponse(returnrank, status = 201)
 
