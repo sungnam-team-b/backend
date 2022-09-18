@@ -6,8 +6,8 @@ import uuid
 
 class Great(models.Model):
     id = models.IntegerField(primary_key=True)
-    name = models.CharField(unique=True, max_length=200, null=True, blank=True)  #erd랑 다름
-    description = models.CharField(max_length=200,default="")   #erd랑 다름
+    name = models.CharField(unique=True, max_length=200, null=True, blank=True) 
+    description = models.CharField(max_length=200,default="") 
     great_url = models.CharField(max_length=200,default="")
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
@@ -29,7 +29,7 @@ class Picture(models.Model):
     #UUID = models.UUIDField(default=uuid.uuid4, editable=False)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
-    user_id = models.ForeignKey( "user.user", on_delete=models.CASCADE, db_column='user_id', null=True)
+    #user_id = models.ForeignKey( "user.user", on_delete=models.CASCADE, db_column='user_id', null=True)
 
     class Meta:
         ordering = ['id']
