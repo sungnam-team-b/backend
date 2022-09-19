@@ -9,5 +9,6 @@ urlpatterns = [
     # path('user/<user_id>',views.airesult),
     path('user',views.airesult),
     path('models',views.addmodel), #test용 user 모델 추가
+    path('<int:userId>/mypage', views.mypage),
     path('rank',views.ranking)
 ]
