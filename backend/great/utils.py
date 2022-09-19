@@ -76,7 +76,8 @@ def get_ai_result(filename):
         j = i * 100
         list3.append(round(j,1))
     great_dic = { name:value for name, value in zip(rank, list3) }
-    return great_dic
+    returndata = {'ai_result':great_dic}
+    return returndata
 
 def get_img_url(img):
     s3_client = boto3.client(

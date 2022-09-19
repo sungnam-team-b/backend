@@ -1,7 +1,7 @@
 # Create your models here.
 from pyexpat import model
 from django.db import models
-#from user.models import user
+# from user.models import user
 import uuid 
 
 class Great(models.Model):
