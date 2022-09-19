@@ -132,8 +132,8 @@ def ranking(request):
         clist.append(x[i][2]) #similarity
     for i in range(len(alist)):
         returnrank[i] = {}
-        returnrank[i]['alias'] = alist[i]
-        returnrank[i]['name'] = blist[i]
+        returnrank[i]['alias'] = blist[i]
+        returnrank[i]['name'] = alist[i]
         returnrank[i]['similarity'] = clist[i]
         returnrank[i]['rank'] = i
     print(returnrank)
