@@ -155,7 +155,7 @@ def get_task_id(request,user_id):
     normalized_image_array = (image_array.astype(np.float32) / 127.0) - 1
     img_instance = {'a':normalized_image_array}
     task = ai_task.delay(img_instance)
-    returndata = dict({{"task_id":task.id},{"picuuid":picuuid}})
+    returndata = {"task_id":task.id, "picuuid":picuuid}
     # task = ai_task.delay()
     return JsonResponse(returndata)
 
