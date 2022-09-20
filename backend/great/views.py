@@ -26,7 +26,7 @@ import os, json
 from pathlib import Path
 from uuid import uuid4
 from datetime import datetime
-# from dateutil.relativedelta import *
+from dateutil.relativedelta import *
 from .tasks import ai_task
 from celery.result import AsyncResult
 from PIL import Image, ImageOps
@@ -129,6 +129,9 @@ def get_task_id(request,user_id):
     fs = FileSystemStorage(location='media', base_url='media')
     filename = fs.save(picuuid+'.png', file)
     uploaded_file_url = fs.url(filename)
+    print('############')
+    print(uploaded_file_url)
+    print('############')
     #s3 버킷에 업로드
     s3 = s3_connection()
     retPut = s3_put_object(
@@ -141,20 +144,7 @@ def get_task_id(request,user_id):
     print('##############')
     print(picuuid)
     print('##############')
-    picuuid = str(picuuid)
-    # image = Image.open(f'/app/media/{picuuid}.png').convert('RGB')
-    # size = (224, 224)
-    # image = ImageOps.fit(image, size, Image.ANTIALIAS)
-    # image_array = np.asarray(image)
-    # normalized_image_array = (image_array.astype(np.float32) / 127.0) - 1
-    # data[0] = normalized_image_array
-    image = Image.open(f'/app/media/{picuuid}.png').convert('RGB')
-    size = (224, 224)
-    image = ImageOps.fit(image, size, Image.ANTIALIAS)
-    image_array = np.asarray(image)
-    normalized_image_array = (image_array.astype(np.float32) / 127.0) - 1
-    img_instance = {'a':normalized_image_array}
-    task = ai_task.delay(img_instance)
+    task = ai_task.delay(filename)
     returndata = {"task_id":task.id, "picuuid":picuuid}
     # task = ai_task.delay()
     return JsonResponse(returndata)
@@ -177,7 +167,7 @@ def get_task_result(request, user_id, task_id):
     print(ai_results)
     print('####################')
     # picuuid = user.objects.get(uuid = user.objects.get(id=userid)).uuid
-    picuuid = userid
+    picuuid = request.POST['user_id']
     # pictureid = Picture.objects.filter(uuid = picuuid).values('id')
     ret_user_id = user.objects.filter(uuid = user_id ).values('id')
     pictureid = Picture.objects.filter(user_id = ret_user_id).values('id')
@@ -231,7 +221,7 @@ def get_task_result(request, user_id, task_id):
     returnresult['result'] = data_convert
     returnresult['userimage'] = retGet
     returnresult['animalimage'] = s3_get_image_url(s3, 'animal/' + str(result1) + '.png')
-    os.remove(f'/app/media/{picuuid}.png')
+    # os.remove(f'/app/media/{picuuid}.png')
     return JsonResponse(returnresult, status = 201)
     
 
