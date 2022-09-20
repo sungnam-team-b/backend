@@ -17,6 +17,7 @@ from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 import requests
 
+
 from django.shortcuts import render
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
@@ -28,6 +29,8 @@ from datetime import datetime
 # from dateutil.relativedelta import *
 from .tasks import ai_task
 from celery.result import AsyncResult
+from PIL import Image, ImageOps
+import numpy as np
 
 def greatview(request):
     return JsonResponse({"id" : "test"})
@@ -120,8 +123,8 @@ def get_greatlist(request):
 def get_task_id(request,user_id):
     picuuid = str(uuid4())
     file = request.FILES['filename']
-    useruuid = request.POST['user_id'] #uuid로 모델에서 값 조회하는걸로 변경
-    userquery = user.objects.filter(uuid = useruuid).values()
+    # useruuid = request.POST['user_id'] #uuid로 모델에서 값 조회하는걸로 변경
+    userquery = user.objects.filter(uuid = user_id).values()
     userid = (userquery[0])['id']
     fs = FileSystemStorage(location='media', base_url='media')
     filename = fs.save(picuuid+'.png', file)
@@ -132,9 +135,29 @@ def get_task_id(request,user_id):
         s3, AWS_STORAGE_BUCKET_NAME, '/app/media/' + str(picuuid) + '.png', 'image/' + str(picuuid) + '.png')
     retGet = s3_get_image_url(s3, 'image/' + str(picuuid) + '.png') #s3 이미지 url
     #picture 정보 db에 저장
-    Picture.objects.create(user_id = user.objects.get(id=userid), picture_url = retGet, uuid = picuuid )  
-    task = ai_task.delay(f'{picuuid}.png')
-    return JsonResponse({"task_id" : task.id})
+    Picture.objects.create(user_id = user.objects.get(id=userid), picture_url = retGet, uuid = picuuid )
+    # data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
+    # image = Image.open(f'app/media/{filename}')
+    print('##############')
+    print(picuuid)
+    print('##############')
+    picuuid = str(picuuid)
+    # image = Image.open(f'/app/media/{picuuid}.png').convert('RGB')
+    # size = (224, 224)
+    # image = ImageOps.fit(image, size, Image.ANTIALIAS)
+    # image_array = np.asarray(image)
+    # normalized_image_array = (image_array.astype(np.float32) / 127.0) - 1
+    # data[0] = normalized_image_array
+    image = Image.open(f'/app/media/{picuuid}.png').convert('RGB')
+    size = (224, 224)
+    image = ImageOps.fit(image, size, Image.ANTIALIAS)
+    image_array = np.asarray(image)
+    normalized_image_array = (image_array.astype(np.float32) / 127.0) - 1
+    img_instance = {'a':normalized_image_array}
+    task = ai_task.delay(img_instance)
+    returndata = dict({{"task_id":task.id},{"picuuid":picuuid}})
+    # task = ai_task.delay()
+    return JsonResponse(returndata)
 
 @api_view(['GET'])
 def get_task_result(request, user_id, task_id):
@@ -143,23 +166,33 @@ def get_task_result(request, user_id, task_id):
     if not task.ready(): #작업이 완료되지 않았을 경우 
         return JsonResponse({'ai_result': 'notyet'})
 
-    ai_results = task.get("ai_results")
+    ai_results = task.get("ai_result")
 
-    if ai_results['ai_results'] == 0:
+    if ai_results['ai_result'] == 0:
         return JsonResponse({"ai_result": "false"})    
+
     keys = list((ai_results['ai_result']).keys())
-    picuuid = user.objects.get(userid = user_id).uuid
-    pictureid = Picture.objects.filter(uuid = picuuid).values('id')
+    print('####################')
+    print(keys)
+    print(ai_results)
+    print('####################')
+    # picuuid = user.objects.get(uuid = user.objects.get(id=userid)).uuid
+    picuuid = userid
+    # pictureid = Picture.objects.filter(uuid = picuuid).values('id')
+    ret_user_id = user.objects.filter(uuid = user_id ).values('id')
+    pictureid = Picture.objects.filter(user_id = ret_user_id).values('id')
     #ai 결과 db에 저장
     result1 = keys[0] # 첫번쨰 key값
     result2 = keys[1] # 두번째 key값
     result3 = keys[2] # 세번째 key값
     a = get_animal_num('abc')
     print('#########')
-    print(int((pictureid[0])['id']))
-    print(a)
+    print(pictureid[0])
+    print(result1)
+    print(result2)
+    print(result3)
     print('#########')
-    data_convert = {k:float(v) for k,v in ai_results.items()}
+    data_convert = {k:float(v) for k,v in ai_results['ai_result'].items()}
     
     ########
     # Result.objects.create(user_id = user.objects.get(id = int(userid)),\

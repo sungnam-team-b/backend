@@ -34,23 +34,24 @@ def s3_get_image_url(s3, filename : str):
     '''
     return f'https://{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_BUCKET_REGION}.amazonaws.com/{filename}'
 
-def get_ai_result(filename):
+# def get_ai_result(filename):
+def get_ai_result(request):
     list1 = []
     list2 = []
     list3 = []
     rank = []
     animal_list = ['mouse','cow','tiger','rabbit','dragon','snake','horse','lamb','monkey','chicken','dog','pig']
     k=0
+    normalized_image_array = request['a']
     #picture_id로 
     model_path = os.path.dirname(__file__) + '/model/keras_model.h5'
     model = load_model(model_path)
     data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
     # image = Image.open(f'app/media/{filename}')
-    image = Image.open(f'/app/media/{filename}')
-    size = (224, 224)
-    image = ImageOps.fit(image, size, Image.ANTIALIAS)
-    image_array = np.asarray(image)
-    normalized_image_array = (image_array.astype(np.float32) / 127.0) - 1
+    # size = (224, 224)
+    # image = ImageOps.fit(image, size, Image.ANTIALIAS)
+    # image_array = np.asarray(image)
+    # normalized_image_array = (image_array.astype(np.float32) / 127.0) - 1
     data[0] = normalized_image_array
     prediction = model.predict(data)
     # print(prediction)
@@ -76,7 +77,10 @@ def get_ai_result(filename):
         j = i * 100
         list3.append(round(j,1))
     great_dic = { name:value for name, value in zip(rank, list3) }
-    returndata = {'ai_result':great_dic}
+    returndata = {'ai_result' : great_dic}
+    print('###############')
+    print(returndata)
+    print('###############')
     return returndata
 
 def get_img_url(img):

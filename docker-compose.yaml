@@ -57,10 +57,10 @@ services:
   celery_worker:
     container_name: celery_worker
     build:
-      context: ./backend/was
+      context: ./backend
       dockerfile: dockerfile
     volumes:
-      - ./backend/was:/backend
+      - ./backend:/backend
     ports: []
     depends_on:
       - rabbitmq
@@ -69,4 +69,4 @@ services:
     environment:
       - C_FORCE_ROOT=true
     command: sh -c "python wait_mysql.py &&
-                    celery -A was worker --loglevel=info"
+                    celery -A backend worker --loglevel=info"
