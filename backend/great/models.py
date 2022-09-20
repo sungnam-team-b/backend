@@ -64,3 +64,10 @@ class Result(models.Model):
 
     def __str__(self):
         return self.user_id+ ' ' + self.great_id + ' ' + self.picture_id + ' ' + self.similarity + ' ' + self.created_at+ ' ' + self.updated_at
+
+class MyPage(models.Model):
+    class Meta:
+        db_table = 'mypage'
+    great = models.ForeignKey(Great, on_delete=models.PROTECT, related_name='mypagegreat')
+    result = models.ForeignKey(Result, on_delete=models.PROTECT, related_name='mypageresult')
+    picture = models.ForeignKey(Picture, on_delete=models.PROTECT, related_name='mypagepicture')

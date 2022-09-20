@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
-from .models import Great,Result
+from .models import Great,Result, MyPage
 from .serializers import GreatlistResponse, MyPageResponse
 from rest_framework.response import Response
 from django.core.cache import cache
@@ -30,8 +30,10 @@ def mypage(request, userId):
         return JsonResponse({userId: 'PRODUCT_DOES_NOT_EXIST'}, status=404)
     
 
-    resultByUser = Result.objects.select_related('picture_id').filter(user_id=user.objects.get(id=userId))
+    resultByUser = Result.objects.select_related('picture_id').select_related('great_id').filter(user_id=user.objects.get(id=userId))
     #resultByUser = Result.objects.select_related('picture_id').filter(user_id=userId)
+
+    #resultByUser = MyPage.objects.filter(mypagegreat__mypageresult__mypagepicture=my_user)
     
     serializer = MyPageResponse(resultByUser, many=True)
     return Response(serializer.data)
