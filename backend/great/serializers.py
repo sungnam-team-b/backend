@@ -14,11 +14,16 @@ class PictureSerializer(serializers.ModelSerializer):
     class Meta:
         model =Picture
         fields =['id','picture_url','user_id']
-
+        
+class GreatSerializer(serializers.ModelSerializer):
+    class Meta:
+        model =Great
+        fields =['name','description','great_url']
 
 
 class MyPageResponse(serializers.ModelSerializer):
     picture_id=PictureSerializer() #출처: https://www.hides.kr/846 [Hide:티스토리]
+    great_id=GreatSerializer()
     class Meta:
         model = Result
-        fields = ['id', 'similarity','picture_id']  
+        fields = ['id', 'similarity','picture_id','great_id']  

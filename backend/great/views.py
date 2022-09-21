@@ -30,10 +30,6 @@ from dateutil.relativedelta import *
 def greatview(request):
     return JsonResponse({"id" : "test"})
 
-def great_list(request):
-    greats = Great.objects.all()
-    return JsonResponse({"greats" : "greats"})
-
 #전체 great 조회 
 @api_view(['GET'])
 def get_greatlist(request):
@@ -154,9 +150,9 @@ def mypage(request, userId):
     if not Result.objects.filter(user_id=userId).exists():
         return JsonResponse({userId: 'PRODUCT_DOES_NOT_EXIST'}, status=404)
     
-
-    resultByUser = Result.objects.select_related('picture_id').filter(user_id=user.objects.get(id=userId))
+    #resultByUser = Result.objects.select_related('picture_id').select_related('great_id').filter(user_id=user.objects.get(id=userId))
     #resultByUser = Result.objects.select_related('picture_id').filter(user_id=userId)
+    resultByUser = Result.objects.all().filter(user_id=userId)
     
     serializer = MyPageResponse(resultByUser, many=True)
     return Response(serializer.data)
