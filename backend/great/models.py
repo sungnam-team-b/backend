@@ -5,7 +5,7 @@ from django.db import models
 import uuid 
 
 class Great(models.Model):
-    name = models.CharField(unique=True, max_length=30, null=True, blank=True)  #erd랑 다름
+    name = models.CharField(unique=True, max_length=30, blank=True)  #erd랑 다름
     description = models.CharField(max_length=200,default="")   #erd랑 다름
     great_url = models.CharField(max_length=200,default="")
     created_at = models.DateTimeField(auto_now_add=True, blank=True)
@@ -26,11 +26,11 @@ class Great(models.Model):
 
 class Picture(models.Model):
     # user_id = models.ForeignKey(user, on_delete=models.CASCADE, db_column = 'user_id')
-    user_id = models.ForeignKey( "user.user", on_delete=models.CASCADE, db_column='user_id', null=True)
+    user_id = models.ForeignKey( "user.user", on_delete=models.CASCADE, db_column='user_id')
     picture_url = models.CharField(max_length=200,default="")
-    uuid = models.UUIDField(default=uuid.uuid4, editable=False, null=True )
-    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
-    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False )
+    created_at = models.DateTimeField(auto_now_add=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True)
 
     class Meta:
         db_table = 'picture'
@@ -46,12 +46,12 @@ class Picture(models.Model):
 
 class Result(models.Model):
     # user_id = models.ForeignKey(user, on_delete=models.CASCADE, db_column = 'user_id')
-    user_id = models.ForeignKey( "user.user", on_delete=models.CASCADE, db_column='user_id', null=True)
+    user_id = models.ForeignKey( "user.user", on_delete=models.CASCADE, db_column='user_id')
     great_id = models.ForeignKey(Great, on_delete=models.CASCADE, db_column ='great_id')
-    picture_id = models.ForeignKey(Picture, on_delete=models.CASCADE, db_column ='picture_id', null=True)
-    similarity = models.FloatField(default=0., null=True)
-    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
-    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
+    picture_id = models.ForeignKey(Picture, on_delete=models.CASCADE, db_column ='picture_id')
+    similarity = models.FloatField(default=0.)
+    created_at = models.DateTimeField(auto_now_add=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True)
     
 
     class Meta:
