@@ -11,10 +11,6 @@ from user.models import user
 def greatview(request):
     return JsonResponse({"id" : "test"})
 
-def list(request):
-    greats = Great.objects.all()
-    return JsonResponse({"greats" : "greats"})
-
 #전체 great 조회 
 @api_view(['GET'])
 def get_greatlist(request):
