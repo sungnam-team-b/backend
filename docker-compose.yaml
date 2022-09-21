@@ -3,6 +3,8 @@ version: "3.8"
 volumes:
   mysql_data:
   redisdata:
+  prometheus_data: {}
+  grafana_data: {}
 
 services:
   mysqldb:
@@ -55,6 +57,7 @@ services:
     image: prom/prometheus
     container_name: prometheus
     volumes:
+      - prom_data:/prometheus
       - ./observe/prometheus/config/:/etc/prometheus/
     ports:
       - 9090:9090
@@ -65,6 +68,8 @@ services:
   grafana:
     image: grafana/grafana
     container_name: grafana
+    command: >
+      bash -c "python wait_mysql.py "&&
     depends_on:
       - prometheus
     ports:
