@@ -46,7 +46,6 @@ class Picture(models.Model):
 class Result(models.Model):
     # user_id = models.ForeignKey(user, on_delete=models.CASCADE, db_column = 'user_id')
     user_id = models.ForeignKey( "user.user", on_delete=models.CASCADE, db_column='user_id', null=True)
-    #great_id = models.OneToOneField(Great)
     great_id = models.OneToOneField(Great, on_delete=models.CASCADE, db_column ='great_id', null=True, related_name='great')
     picture_id = models.ForeignKey(Picture, on_delete=models.CASCADE, db_column ='picture_id', null=True)
     similarity = models.FloatField(default=0., null=True)
@@ -65,10 +64,3 @@ class Result(models.Model):
 
     def __str__(self):
         return self.user_id+ ' ' + self.great_id + ' ' + self.picture_id + ' ' + self.similarity + ' ' + self.created_at+ ' ' + self.updated_at
-
-class MyPage(models.Model):
-    class Meta:
-        db_table = 'mypage'
-    great = models.ForeignKey(Great, on_delete=models.PROTECT, related_name='mypagegreat')
-    result = models.ForeignKey(Result, on_delete=models.PROTECT, related_name='mypageresult')
-    picture = models.ForeignKey(Picture, on_delete=models.PROTECT, related_name='mypagepicture')
