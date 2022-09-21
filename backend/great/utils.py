@@ -47,7 +47,8 @@ def get_ai_result(filename):
     model_path = os.path.dirname(__file__) + '/model/keras_model.h5'
     model = load_model(model_path)
     data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
-    image = Image.open(f'app/media/{filename}')
+    image = Image.open('/app/media/'+filename).convert('RGB')
+
     size = (224, 224)
     image = ImageOps.fit(image, size, Image.ANTIALIAS)
     image_array = np.asarray(image)

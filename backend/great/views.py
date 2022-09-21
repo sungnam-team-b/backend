@@ -128,9 +128,9 @@ def get_task_id(request,user_id):
     fs = FileSystemStorage(location='media', base_url='media')
     filename = fs.save(picuuid+'.png', file)
     uploaded_file_url = fs.url(filename)
-    print('############')
-    print(uploaded_file_url)
-    print('############')
+    # print('############')
+    # print(uploaded_file_url)
+    # print('############')
     #s3 버킷에 업로드
     s3 = s3_connection()
     retPut = s3_put_object(
@@ -141,15 +141,15 @@ def get_task_id(request,user_id):
     # data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
     # image = Image.open(f'app/media/{filename}')
     
-    print('##############')
-    print(picuuid)
-    print('##############')
+    # print('##############')
+    # print(picuuid)
+    # print('##############')
     task = ai_task.delay(filename)
     returndata = {"task_id":task.id, "picuuid":picuuid}
     # task = ai_task.delay()
     return JsonResponse(returndata)
 
-@api_view(['GET'])
+@api_view(['POST'])
 def get_task_result(request, user_id, task_id):
     userid = user_id 
     task = AsyncResult(task_id)
@@ -162,27 +162,37 @@ def get_task_result(request, user_id, task_id):
         return JsonResponse({"ai_result": "false"})    
 
     keys = list((ai_results['ai_result']).keys())
-    print('####################')
-    print(keys)
-    print(ai_results)
-    print('####################')
+    # print('####################')
+    # print(keys)
+    # print(ai_results)
+    # print('####################')
     # picuuid = user.objects.get(uuid = user.objects.get(id=userid)).uuid
-    picuuid = request.POST['user_id']
+    # picuuid = user_id
+    picuuid = request.POST['picuuid']
     # pictureid = Picture.objects.filter(uuid = picuuid).values('id')
     ret_user_id = user.objects.filter(uuid = user_id ).values('id')
-    pictureid = Picture.objects.filter(user_id = ret_user_id).values('id')
+    pictureid = Picture.objects.filter(uuid = picuuid).values('id')
+    # print('################################')
+    # print(ai_results)
+    # print((pictureid[0])['id'])
+    # print('####################################')
+
     #ai 결과 db에 저장
     result1 = keys[0] # 첫번쨰 key값
     result2 = keys[1] # 두번째 key값
     result3 = keys[2] # 세번째 key값
     a = get_animal_num('abc')
-    print('#########')
-    print(pictureid[0])
-    print(result1)
-    print(result2)
-    print(result3)
-    print('#########')
+    # print('#########')
+    # # print(pictureid[0])
+    # print(result1)
+    # print(result2)
+    # print(result3)
+    # print('#########')
     data_convert = {k:float(v) for k,v in ai_results['ai_result'].items()}
+    # print((ai_results['ai_result'])[f'{result1}'])
+    # print(ai_results['ai_result'])
+    
+    print(float((ai_results['ai_result'])[f'{result3}']))
     
     ########
     # Result.objects.create(user_id = user.objects.get(id = int(userid)),\
@@ -203,24 +213,45 @@ def get_task_result(request, user_id, task_id):
     #         picture_id = Picture.objects.get(id = int((pictureid[0])['id'])),\
     #             similarity = float(result[f'{str(result1)}']))
     ################################
-    Result.objects.create(user_id = user.objects.get(id = int(userid)),\
+    # Result.objects.create(user_id = user.objects.get(id = int(userid)),\
+    #     great_id = Great.objects.get(id = ((get_animal_num('abc'))[0])['id']),\
+    #         picture_id = Picture.objects.get(id = int((pictureid[0])['id'])),\
+    #             similarity = float(ai_results[f'{str(result1)}']))            
+    # Result.objects.create(user_id = user.objects.get(id = int(userid)),\
+    #     great_id = Great.objects.get(id = ((get_animal_num('BTS'))[0])['id']),\
+    #         picture_id = Picture.objects.get(id = int((pictureid[0])['id'])),\
+    #             similarity = float(ai_results[f'{str(result2)}']))
+    # Result.objects.create(user_id = user.objects.get(id = int(userid)),\
+    #     great_id = Great.objects.get(id = ((get_animal_num('name'))[0])['id']),\
+    #         picture_id = Picture.objects.get(id = int((pictureid[0])['id'])),\
+    #             similarity = float(ai_results[f'{str(result3)}']))
+    ################################
+
+    Result.objects.create(user_id = user.objects.get(id = (ret_user_id[0])['id']),\
         great_id = Great.objects.get(id = ((get_animal_num('abc'))[0])['id']),\
             picture_id = Picture.objects.get(id = int((pictureid[0])['id'])),\
-                similarity = float(ai_results[f'{str(result1)}']))            
-    Result.objects.create(user_id = user.objects.get(id = int(userid)),\
+                similarity = float((ai_results['ai_result'])[f'{result1}']))            
+    Result.objects.create(user_id = user.objects.get(id = (ret_user_id[0])['id']),\
         great_id = Great.objects.get(id = ((get_animal_num('BTS'))[0])['id']),\
             picture_id = Picture.objects.get(id = int((pictureid[0])['id'])),\
-                similarity = float(ai_results[f'{str(result2)}']))
-    Result.objects.create(user_id = user.objects.get(id = int(userid)),\
+                similarity = float((ai_results['ai_result'])[f'{result2}']))
+    Result.objects.create(user_id = user.objects.get(id = (ret_user_id[0])['id']),\
         great_id = Great.objects.get(id = ((get_animal_num('name'))[0])['id']),\
             picture_id = Picture.objects.get(id = int((pictureid[0])['id'])),\
-                similarity = float(ai_results[f'{str(result3)}']))
+                similarity = float((ai_results['ai_result'])[f'{result3}']))
+
+
+    # print('#########################################')
+    # picture_id = Picture.objects.get(uuid = picuuid)
+    # print(picture_id)
+    # print('#########################################')
     s3 = s3_connection()
     retGet = s3_get_image_url(s3, 'image/' + str(picuuid) + '.png')
     returnresult = {}
     returnresult['result'] = data_convert
     returnresult['userimage'] = retGet
     returnresult['animalimage'] = s3_get_image_url(s3, 'animal/' + str(result1) + '.png')
+    print(returnresult)
     # os.remove(f'/app/media/{picuuid}.png')
     return JsonResponse(returnresult, status = 201)
     
