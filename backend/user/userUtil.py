@@ -22,7 +22,6 @@ def user_find_name(username):
 def user_find_alias(alias):
     return user.objects.filter(alias=alias)
 
-
 def user_find_email(email):
     return user.objects.filter(email=email)
 
