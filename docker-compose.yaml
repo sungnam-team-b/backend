@@ -26,7 +26,7 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./backend:/backend
+      - ./backend:/app
     depends_on:
       - mysqldb
       - redis
@@ -60,7 +60,7 @@ services:
       context: ./backend
       dockerfile: dockerfile
     volumes:
-      - ./backend:/backend
+      - ./backend:/app
     ports: []
     depends_on:
       - rabbitmq

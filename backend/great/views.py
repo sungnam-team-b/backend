@@ -1,4 +1,3 @@
-from re import X
 from django.shortcuts import render
 from django.http import JsonResponse
 from .models import Great, Picture, Result
@@ -141,6 +140,7 @@ def get_task_id(request,user_id):
     Picture.objects.create(user_id = user.objects.get(id=userid), picture_url = retGet, uuid = picuuid )
     # data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
     # image = Image.open(f'app/media/{filename}')
+    
     print('##############')
     print(picuuid)
     print('##############')
