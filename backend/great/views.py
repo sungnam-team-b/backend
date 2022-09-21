@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from django.core.cache import cache
 import requests
 from user.models import user
+from user.serializers import UserSerializer
 
 def greatview(request):
     return JsonResponse({"id" : "test"})
@@ -20,7 +21,16 @@ def get_greatlist(request):
 
 #마이페이지 
 @api_view(['GET'])
-def mypage(request, userId):
+def mypage(request, uuid):
+
+    #uuid로 userId 조회
+    resultuserId = user.objects.filter(uuid_id=uuid).get('id')
+    #userId = UserSerializer(resultuserId).data
+    print('>>>>>>>>>>')
+    print(resultuserId)
+    #print(userId)
+    print('>>>>>>>>>>')
+
     
     if not Result.objects.filter(user_id=userId).exists():
         return JsonResponse({userId: 'PRODUCT_DOES_NOT_EXIST'}, status=404)
