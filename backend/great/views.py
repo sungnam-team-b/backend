@@ -127,7 +127,15 @@ def get_task_id(request,user_id):
     userid = (userquery[0])['id']
     fs = FileSystemStorage(location='media', base_url='media')
     filename = fs.save(picuuid+'.png', file)
-    uploaded_file_url = fs.url(filename)
+    #################################################
+    image = Image.open(f'app/media/{filename}')
+    size = (224, 224)
+    image = ImageOps.fit(image, size, Image.ANTIALIAS)
+    image_array = np.asarray(image)
+    normalized_image_array = (image_array.astype(np.float32) / 127.0) - 1
+
+    ################################################
+    uploaded_file_url = fs.url(normalized_image_array)
     print('############')
     print(uploaded_file_url)
     print('############')
