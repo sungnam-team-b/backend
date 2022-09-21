@@ -149,16 +149,7 @@ def addmodel(request):
 def mypage(request, user_uuid):
 
     userId = user.objects.get(uuid = user_uuid).id
-    #uuid로 userId 조회
-    
-    # resultuserId = user.objects.filter(uuid=user_uuid)#.get('id')
-    # serializer2 = UUIDSerializer(resultuserId)
-    # userId = serializer2.data
-    # print('>>>>>>>>>>')
-    # print(resultuserId)
-    # #print(userId)
-    # print('>>>>>>>>>>')
-    
+   
     if not Result.objects.filter(user_id=userId).exists():
         return JsonResponse({userId: 'PRODUCT_DOES_NOT_EXIST'}, status=404)
     
@@ -168,7 +159,6 @@ def mypage(request, user_uuid):
     
     serializer = MyPageResponse(resultByUser, many=True)
     return Response(serializer.data)
-    
     
     # if cache.get("logindata"):
     #     logindata = cache.get("logindata")
