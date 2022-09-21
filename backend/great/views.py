@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from .models import Great, Picture, Result
 from user.models import user
+from user.serializers import UUIDSerializer
 
 from backend.settings import AWS_STORAGE_BUCKET_NAME
 from backend.settings import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
@@ -145,8 +146,10 @@ def addmodel(request):
 
 #마이페이지 
 @api_view(['GET'])
-def mypage(request, userId):
-    
+def mypage(request, user_uuid):
+
+    userId = user.objects.get(uuid = user_uuid).id
+   
     if not Result.objects.filter(user_id=userId).exists():
         return JsonResponse({userId: 'PRODUCT_DOES_NOT_EXIST'}, status=404)
     
@@ -156,7 +159,6 @@ def mypage(request, userId):
     
     serializer = MyPageResponse(resultByUser, many=True)
     return Response(serializer.data)
-    
     
     # if cache.get("logindata"):
     #     logindata = cache.get("logindata")
