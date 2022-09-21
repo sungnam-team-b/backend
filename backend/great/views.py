@@ -29,17 +29,9 @@ def mypage(request, userId):
     if not Result.objects.filter(user_id=userId).exists():
         return JsonResponse({userId: 'PRODUCT_DOES_NOT_EXIST'}, status=404)
     
-
     #resultByUser = Result.objects.select_related('picture_id').select_related('great_id').filter(user_id=user.objects.get(id=userId))
-    #success
     #resultByUser = Result.objects.select_related('picture_id').filter(user_id=userId)
-
     resultByUser = Result.objects.all().filter(user_id=userId)
-
-    #print(resultByUser)
-
-
-    #resultByUser = MyPage.objects.filter(mypagegreat__mypageresult__mypagepicture=my_user)
     
     serializer = MyPageResponse(resultByUser, many=True)
     return Response(serializer.data)
