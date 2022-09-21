@@ -21,4 +21,4 @@ class MyPageResponse(serializers.ModelSerializer):
     picture_id=PictureSerializer() #출처: https://www.hides.kr/846 [Hide:티스토리]
     class Meta:
         model = Result
-        fields = ['id', 'similarity','picture_id']  
+        fields = ['id', 'similarity','picture_id','great_id']  

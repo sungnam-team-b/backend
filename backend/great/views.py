@@ -36,6 +36,8 @@ def mypage(request, userId):
 
     resultByUser = Result.objects.all().filter(user_id=userId)
 
+    #print(resultByUser)
+
 
     #resultByUser = MyPage.objects.filter(mypagegreat__mypageresult__mypagepicture=my_user)
     

@@ -46,7 +46,8 @@ class Picture(models.Model):
 class Result(models.Model):
     # user_id = models.ForeignKey(user, on_delete=models.CASCADE, db_column = 'user_id')
     user_id = models.ForeignKey( "user.user", on_delete=models.CASCADE, db_column='user_id', null=True)
-    great_id = models.OneToOneField(Great, on_delete=models.CASCADE, db_column ='great_id', null=True)
+    #great_id = models.OneToOneField(Great)
+    great_id = models.OneToOneField(Great, on_delete=models.CASCADE, db_column ='great_id', null=True, related_name='great')
     picture_id = models.ForeignKey(Picture, on_delete=models.CASCADE, db_column ='picture_id', null=True)
     similarity = models.FloatField(default=0., null=True)
     created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
