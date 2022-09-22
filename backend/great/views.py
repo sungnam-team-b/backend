@@ -87,7 +87,7 @@ def get_task_result(request, user_id, task_id):
         return JsonResponse({"ai_result": "false"})    
     keys = list((ai_results['ai_result']).keys())
     picuuid = request.POST['picuuid']
-    ret_user_id = user.objects.filter(uuid = user_id ).values('id')
+    ret_user_id = user.objects.filter(uuid = user_id).values('id')
     pictureid = Picture.objects.filter(uuid = picuuid).values('id')
     #ai 결과 db에 저장
     result1 = keys[0] # 첫번쨰 key값
@@ -138,7 +138,7 @@ def get_task_result(request, user_id, task_id):
             picture_id = Picture.objects.get(id = int((pictureid[0])['id'])),\
                 similarity = float((ai_results['ai_result'])[f'{result2}']))
     Result.objects.create(user_id = user.objects.get(id = (ret_user_id[0])['id']),\
-        great_id = Great.objects.get(id = ((get_animal_num('name'))[0])['id']),\
+        great_id = Great.objects.get(id = ((get_animal_num('BTS'))[0])['id']),\
             picture_id = Picture.objects.get(id = int((pictureid[0])['id'])),\
                 similarity = float((ai_results['ai_result'])[f'{result3}']))
 
