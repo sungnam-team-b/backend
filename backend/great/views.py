@@ -46,15 +46,11 @@ def get_greatlist(request):
 def get_task_id(request,user_id):
     picuuid = str(uuid4())
     file = request.FILES['filename']
-    # useruuid = request.POST['user_id'] #uuid로 모델에서 값 조회하는걸로 변경
     userquery = user.objects.filter(uuid = user_id).values()
     userid = (userquery[0])['id']
     fs = FileSystemStorage(location='media', base_url='media')
     filename = fs.save(picuuid+'.png', file)
     uploaded_file_url = fs.url(filename)
-    # print('############')
-    # print(uploaded_file_url)
-    # print('############')
     #s3 버킷에 업로드
     s3 = s3_connection()
     retPut = s3_put_object(
@@ -62,12 +58,6 @@ def get_task_id(request,user_id):
     retGet = s3_get_image_url(s3, 'image/' + str(picuuid) + '.png') #s3 이미지 url
     #picture 정보 db에 저장
     Picture.objects.create(user_id = user.objects.get(id=userid), picture_url = retGet, uuid = picuuid )
-    # data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
-    # image = Image.open(f'app/media/{filename}')
-    
-    # print('##############')
-    # print(picuuid)
-    # print('##############')
     task = ai_task.delay(filename)
     returndata = {"task_id":task.id, "picuuid":picuuid}
     # task = ai_task.delay()
@@ -93,49 +83,17 @@ def get_task_result(request, user_id, task_id):
     a = get_animal_num('abc')
     data_convert = {k:float(v) for k,v in ai_results['ai_result'].items()}
     print(float((ai_results['ai_result'])[f'{result3}']))    
-    ########
-    # Result.objects.create(user_id = user.objects.get(id = int(userid)),\
-    #     great_id = Great.objects.get(id = ((get_animal_num(str(result1)))[0])['id']),\
-    #         picture_id = Picture.objects.get(id = int((pictureid[0])['id'])),\
-    #             similarity = float(result[f'{str(result1)}']))
-    # Result.objects.create(user_id = user.objects.get(id = int(userid)),\
-    #     great_id = Great.objects.get(id = ((get_animal_num(str(result2)))[0])['id']),\
-    #         picture_id = Picture.objects.get(id = int((pictureid[0])['id'])),\
-    #             similarity = float(result[f'{str(result2)}']))
-    # Result.objects.create(user_id = user.objects.get(id = int(userid)),\
-    #     great_id = Great.objects.get(id = ((get_animal_num(str(result3)))[0])['id']),\
-    #         picture_id = Picture.objects.get(id = int((pictureid[0])['id'])),\
-    #             similarity = float(result[f'{str(result3)}']))
-    ################################
-    # Result.objects.create(user_id = user.objects.get(id = int(userid)),\
-    #     great_id = Great.objects.get(id = 123),\
-    #         picture_id = Picture.objects.get(id = int((pictureid[0])['id'])),\
-    #             similarity = float(result[f'{str(result1)}']))
-    ################################
-    # Result.objects.create(user_id = user.objects.get(id = int(userid)),\
-    #     great_id = Great.objects.get(id = ((get_animal_num('abc'))[0])['id']),\
-    #         picture_id = Picture.objects.get(id = int((pictureid[0])['id'])),\
-    #             similarity = float(ai_results[f'{str(result1)}']))            
-    # Result.objects.create(user_id = user.objects.get(id = int(userid)),\
-    #     great_id = Great.objects.get(id = ((get_animal_num('BTS'))[0])['id']),\
-    #         picture_id = Picture.objects.get(id = int((pictureid[0])['id'])),\
-    #             similarity = float(ai_results[f'{str(result2)}']))
-    # Result.objects.create(user_id = user.objects.get(id = int(userid)),\
-    #     great_id = Great.objects.get(id = ((get_animal_num('name'))[0])['id']),\
-    #         picture_id = Picture.objects.get(id = int((pictureid[0])['id'])),\
-    #             similarity = float(ai_results[f'{str(result3)}']))
-    ################################
 
     Result.objects.create(user_id = user.objects.get(id = (ret_user_id[0])['id']),\
-        great_id = Great.objects.get(id = ((get_animal_num('abc'))[0])['id']),\
+        great_id = Great.objects.get(id = ((get_animal_num(result1))[0])['id']),\
             picture_id = Picture.objects.get(id = int((pictureid[0])['id'])),\
                 similarity = float((ai_results['ai_result'])[f'{result1}']))            
     Result.objects.create(user_id = user.objects.get(id = (ret_user_id[0])['id']),\
-        great_id = Great.objects.get(id = ((get_animal_num('BTS'))[0])['id']),\
+        great_id = Great.objects.get(id = ((get_animal_num(result2))[0])['id']),\
             picture_id = Picture.objects.get(id = int((pictureid[0])['id'])),\
                 similarity = float((ai_results['ai_result'])[f'{result2}']))
     Result.objects.create(user_id = user.objects.get(id = (ret_user_id[0])['id']),\
-        great_id = Great.objects.get(id = ((get_animal_num('name'))[0])['id']),\
+        great_id = Great.objects.get(id = ((get_animal_num(result3))[0])['id']),\
             picture_id = Picture.objects.get(id = int((pictureid[0])['id'])),\
                 similarity = float((ai_results['ai_result'])[f'{result3}']))
 
