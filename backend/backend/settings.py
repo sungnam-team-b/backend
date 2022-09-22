@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_yasg',
     'corsheaders',
+    'django_celery_beat',
+    'django_celery_results',
     # apps
     'user',
     'great'
@@ -155,7 +157,20 @@ AWS_S3_SECURE_URLS = False
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+CELERY_BROKER_URL = 'amqp://rabbitmq:5672'
+CELERY_ACCEPT_CONTENT = ['pickle', 'json']
+CELERY_RESULT_BACKEND = 'redis://redis:6379'
+CELERY_TASK_SERIALIZER = 'pickle'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Seoul'
+DATA_UPLOAD_MAX_MEMORY_SIZE = int(1e10)
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': 'redis://redis:6379',
+    }
+}
 
 
 ###S3 Storages
