@@ -155,45 +155,20 @@ def get_task_result(request, user_id, task_id):
     task = AsyncResult(task_id)
     if not task.ready(): #작업이 완료되지 않았을 경우 
         return JsonResponse({'ai_result': 'notyet'})
-
     ai_results = task.get("ai_result")
-
     if ai_results['ai_result'] == 0:
         return JsonResponse({"ai_result": "false"})    
-
     keys = list((ai_results['ai_result']).keys())
-    # print('####################')
-    # print(keys)
-    # print(ai_results)
-    # print('####################')
-    # picuuid = user.objects.get(uuid = user.objects.get(id=userid)).uuid
-    # picuuid = user_id
     picuuid = request.POST['picuuid']
-    # pictureid = Picture.objects.filter(uuid = picuuid).values('id')
     ret_user_id = user.objects.filter(uuid = user_id ).values('id')
     pictureid = Picture.objects.filter(uuid = picuuid).values('id')
-    # print('################################')
-    # print(ai_results)
-    # print((pictureid[0])['id'])
-    # print('####################################')
-
     #ai 결과 db에 저장
     result1 = keys[0] # 첫번쨰 key값
     result2 = keys[1] # 두번째 key값
     result3 = keys[2] # 세번째 key값
     a = get_animal_num('abc')
-    # print('#########')
-    # # print(pictureid[0])
-    # print(result1)
-    # print(result2)
-    # print(result3)
-    # print('#########')
     data_convert = {k:float(v) for k,v in ai_results['ai_result'].items()}
-    # print((ai_results['ai_result'])[f'{result1}'])
-    # print(ai_results['ai_result'])
-    
-    print(float((ai_results['ai_result'])[f'{result3}']))
-    
+    print(float((ai_results['ai_result'])[f'{result3}']))    
     ########
     # Result.objects.create(user_id = user.objects.get(id = int(userid)),\
     #     great_id = Great.objects.get(id = ((get_animal_num(str(result1)))[0])['id']),\
@@ -240,11 +215,6 @@ def get_task_result(request, user_id, task_id):
             picture_id = Picture.objects.get(id = int((pictureid[0])['id'])),\
                 similarity = float((ai_results['ai_result'])[f'{result3}']))
 
-
-    # print('#########################################')
-    # picture_id = Picture.objects.get(uuid = picuuid)
-    # print(picture_id)
-    # print('#########################################')
     s3 = s3_connection()
     retGet = s3_get_image_url(s3, 'image/' + str(picuuid) + '.png')
     returnresult = {}
@@ -252,7 +222,7 @@ def get_task_result(request, user_id, task_id):
     returnresult['userimage'] = retGet
     returnresult['animalimage'] = s3_get_image_url(s3, 'animal/' + str(result1) + '.png')
     print(returnresult)
-    # os.remove(f'/app/media/{picuuid}.png')
+    os.remove(f'/app/media/{picuuid}.png')
     return JsonResponse(returnresult, status = 201)
     
 

@@ -35,7 +35,6 @@ def s3_get_image_url(s3, filename : str):
     return f'https://{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_BUCKET_REGION}.amazonaws.com/{filename}'
 
 def get_ai_result(filename):
-# def get_ai_result(request):
     list1 = []
     list2 = []
     list3 = []
