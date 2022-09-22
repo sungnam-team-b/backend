@@ -21,3 +21,11 @@ numpy
 pillow
 tensorflow==2.10.0
 tensorflow-io==0.25.0
+
+#celery
+paginator
+PyAMQP
+django_celery_beat
+django_celery_results
+celery
+redis
