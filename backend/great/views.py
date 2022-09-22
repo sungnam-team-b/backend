@@ -106,6 +106,7 @@ def airesult(request):
         great_id = Great.objects.get(id = ((get_animal_num('name'))[0])['id']),\
             picture_id = Picture.objects.get(id = int((pictureid[0])['id'])),\
                 similarity = float(result[f'{str(result3)}']))
+                
     returnresult = {}
     returnresult['result'] = data_convert
     returnresult['userimage'] = retGet

@@ -3,8 +3,6 @@ version: "3.8"
 volumes:
   mysql_data:
   redisdata:
-  prometheus_data: {}
-  grafana_data: {}
 
 services:
   mysqldb:
@@ -52,28 +50,29 @@ services:
       - "6379:6379"
     volumes:
       - 'redisdata:/data'
-  
+
   prometheus:
-    image: prom/prometheus
+    image: prom/prometheus:latest
     container_name: prometheus
+    user: root
     volumes:
-      - prom_data:/prometheus
-      - ./observe/prometheus/config/:/etc/prometheus/
+      - ./observe/prometheus/config:/etc/prometheus/
+      - ./observe/prometheus/data:/prometheus
     ports:
       - 9090:9090
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
     restart: always
 
   grafana:
-    image: grafana/grafana
     container_name: grafana
-    command: >
-      bash -c "python wait_mysql.py "&&
-    depends_on:
-      - prometheus
-    ports:
-      - 3100:3100
+    image: grafana/grafana:latest
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=test1234
+      - GF_USERS_ALLOW_SIGN_UP=false
     volumes:
       - ./observe/grafana/grafana.ini:/etc/grafana/grafana.ini
+    ports:
+      - 3100:3100
+    depends_on:
+      - prometheus
     restart: always
