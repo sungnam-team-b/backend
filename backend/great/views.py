@@ -188,10 +188,9 @@ def addmodel(request):
 #마이페이지 
 @api_view(['GET'])
 def mypage(request, user_uuid):
-
     userId = user.objects.get(uuid = user_uuid).id
     payload = user_token_to_data(request.headers.get('Authorization', None))
-    if (payload.get('id') == userId):
+    if (payload.get('id') == str(userId)):
         if not Result.objects.filter(user_id=userId).exists():
             return JsonResponse({userId: 'PRODUCT_DOES_NOT_EXIST'}, status=404)
         
@@ -201,7 +200,7 @@ def mypage(request, user_uuid):
         serializer = MyPageResponse(resultByUser, many=True)
         return Response(serializer.data)
     else:
-        return JsonResponse({"message": "Invalid_Token"}, status=401)
+        return JsonResponse({"message": "Token Error"}, status=401)
     
     # if cache.get("logindata"):
     #     logindata = cache.get("logindata")
