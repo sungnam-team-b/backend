@@ -80,7 +80,6 @@ def get_task_result(request, user_id, task_id):
     result1 = keys[0] # 첫번쨰 key값
     result2 = keys[1] # 두번째 key값
     result3 = keys[2] # 세번째 key값
-    a = get_animal_num('abc')
     data_convert = {k:float(v) for k,v in ai_results['ai_result'].items()}
     print(float((ai_results['ai_result'])[f'{result3}']))    
 
@@ -134,13 +133,6 @@ def ranking(request):
         returnrank[i]['rank'] = i
     print(returnrank)
     return JsonResponse(returnrank, status = 201)
-
-@api_view(['GET'])
-def addmodel(request):
-    user.objects.create(id =1,uuid=1,username='a',alias='a',password=1,salt =1)
-    Great.objects.create(name = 'name')
-
-    return JsonResponse({'test':'succes'})
 
 
 #마이페이지 
