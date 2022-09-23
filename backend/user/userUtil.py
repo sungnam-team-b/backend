@@ -25,6 +25,9 @@ def user_find_alias(alias):
 def user_find_email(email):
     return user.objects.filter(email=email)
 
+def user_get_uuid(username):
+    return user.objects.get(username=username).uuid
+
 def create_user(username, email, password, alias):
     hash_password, salt = user_hash_password(password)
     return user.objects.create(username=username, alias=alias, password=hash_password, salt=salt, email=email)

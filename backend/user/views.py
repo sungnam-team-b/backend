@@ -5,8 +5,10 @@ from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 
 from .serializers import UserSignupResponse
-from .userUtil import create_user, user_find_name, user_ispassword, \
+from .userUtil import create_user, user_find_name, user_ispassword, user_get_uuid, \
     user_get_access_token, user_get_refresh_token, user_refresh_get_access, user_token_to_data, UserDuplicateCheck
+
+from .models import user
 
 def test(request):
     return JsonResponse({"name" : "test"})
@@ -73,18 +75,18 @@ def login(request): #로그인 구현
     input_password = request.data['password']
     access_token = None
     refresh_token = None
-
     if input_password and input_name: #코드에 if문이 세 개... 프론트랑 얘기해서 이건 프론트에서 처리하도록!
         user_data = user_find_name(input_name).first()
         if user_data:
             if user_ispassword(input_password, user_data):
                 access_token = user_get_access_token(user_data)
                 refresh_token = user_get_refresh_token(user_data)
+                user_uuid = user_get_uuid(input_name)
             else: 
                 return JsonResponse({"message": "user not exist"}, status=400)
         else:
             return JsonResponse({"message": "user not exist"}, status=400)
 
-        logindata = {"access_token": access_token, "refresh_token": refresh_token}
+        logindata = {"access_token": access_token, "refresh_token": refresh_token, "uuid": user_uuid}
 
     return JsonResponse(logindata, status=200)
