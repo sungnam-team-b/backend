@@ -3,8 +3,9 @@ from pyexpat import model
 from django.db import models
 # from user.models import user
 import uuid 
+from django_prometheus.models import ExportModelOperationsMixin
 
-class Great(models.Model):
+class Great(ExportModelOperationsMixin('great'), models.Model):
     name = models.CharField(unique=True, max_length=30, null=True, blank=True) 
     description = models.CharField(max_length=1000,default="")
     great_url = models.CharField(max_length=200,default="")
@@ -24,7 +25,7 @@ class Great(models.Model):
     #     return self.name+ ' ' +  self.description+ ' ' +  self.great_url+ ' ' +  self.created_at+ ' ' + self.updated_at
 
 
-class Picture(models.Model):
+class Picture(ExportModelOperationsMixin('picture'), models.Model):
     # user_id = models.ForeignKey(user, on_delete=models.CASCADE, db_column = 'user_id')
     user_id = models.ForeignKey( "user.user", on_delete=models.CASCADE, db_column='user_id', null=True)
     picture_url = models.CharField(max_length=200,default="")
@@ -44,7 +45,7 @@ class Picture(models.Model):
         return self.user_id + ' ' + self.picture_url + ' ' +self.uuid + ' ' + self.created_at+ ' ' + self.updated_at
 
 
-class Result(models.Model):
+class Result(ExportModelOperationsMixin('result'), models.Model):
     # user_id = models.ForeignKey(user, on_delete=models.CASCADE, db_column = 'user_id')
     user_id = models.ForeignKey( "user.user", on_delete=models.CASCADE, db_column='user_id', null=True)
     great_id = models.ForeignKey(Great, on_delete=models.CASCADE, db_column ='great_id', null=True, related_name='great')
