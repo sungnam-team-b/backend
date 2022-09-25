@@ -79,3 +79,16 @@ services:
       - C_FORCE_ROOT=true
     command: sh -c "python wait_mysql.py &&
                     celery -A backend worker --loglevel=info"
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    volumes:
+      - ./etc/prometheus:/etc/prometheus/
+    ports:
+      - 9090:9090
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      # - '--web.console.templates etc/consoles/'
+      # - '--web.console.libraries ~/etc/prometheus/console_libraries/'
+    restart: always
