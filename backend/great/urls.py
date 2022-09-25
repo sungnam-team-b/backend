@@ -3,7 +3,7 @@ from . import views
 
 urlpatterns = [
     path('', views.greatview), # 기본
-    path('greatlist', views.get_greatlist), #great모든 목록 조회
+    path('animalist', views.get_greatlist), #great모든 목록 조회
     path('user/<user_uuid>/mypage', views.mypage),
     #path('<uuid:userId>/mypage', views.mypage)
     # path('user/<user_id>',views.airesult),
