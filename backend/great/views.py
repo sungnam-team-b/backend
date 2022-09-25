@@ -1,25 +1,22 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from .models import Great, Picture, Result
-from Users.models import Users
-from Users.serializers import UUIDSerializer
+from users.models import Users
+from users.serializers import UUIDSerializer
+from users.userUtil import user_token_to_data
 
-from backend.settings import AWS_STORAGE_BUCKET_NAME
-from backend.settings import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
+from backend.settings import AWS_STORAGE_BUCKET_NAME, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
 
 from .utils import s3_connection, get_ai_result, s3_get_image_url, s3_put_object, get_animal_num
-from .serializers import GreatlistResponse
+from .serializers import GreatlistResponse, MyPageResponse
 
 from rest_framework import status, viewsets
-from .serializers import GreatlistResponse, MyPageResponse
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 import requests
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
-
-from Users.userUtil import user_token_to_data
 
 
 import os, json
@@ -31,9 +28,6 @@ from .tasks import ai_task
 from celery.result import AsyncResult
 from PIL import Image, ImageOps
 import numpy as np
-
-def greatview(request):
-    return JsonResponse({"id" : "test"})
 
 #전체 great 조회 
 @api_view(['GET'])
