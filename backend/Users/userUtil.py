@@ -1,4 +1,4 @@
-from .models import user 
+from .models import Users
 import jwt
 import bcrypt
 from backend.settings import ALGORITHM, JWT_SECRET_KEY
@@ -12,25 +12,25 @@ def user_hash_password(password):
     return hash_password, salt
 
 def user_find_id(user_id):
-    return user.objects.filter(id=user_id)
+    return Users.objects.filter(id=user_id)
 
 
 def user_find_name(username):
-    return user.objects.filter(username=username)
+    return Users.objects.filter(username=username)
 
 
 def user_find_alias(alias):
-    return user.objects.filter(alias=alias)
+    return Users.objects.filter(alias=alias)
 
 def user_find_email(email):
-    return user.objects.filter(email=email)
+    return Users.objects.filter(email=email)
 
 def user_get_uuid(username):
-    return user.objects.get(username=username).uuid
+    return Users.objects.get(username=username).uuid
 
 def create_user(username, email, password, alias):
     hash_password, salt = user_hash_password(password)
-    return user.objects.create(username=username, alias=alias, password=hash_password, salt=salt, email=email)
+    return Users.objects.create(username=username, alias=alias, password=hash_password, salt=salt, email=email)
 
 def user_ispassword(password, user_data):
     password = str(password).encode('utf-8')

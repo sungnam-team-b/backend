@@ -1,7 +1,6 @@
 from fileinput import filename
 from unicodedata import name
 from .models import Picture, Great, Result
-from user.models import user
 from keras.models import load_model
 from PIL import Image, ImageOps
 from uuid import uuid4
