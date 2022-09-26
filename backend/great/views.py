@@ -44,14 +44,9 @@ def greatview(request):
 #전체 great 조회 
 @api_view(['GET'])
 def get_greatlist(request):
-
     start = time.time()
-    #cash_yes=cache.get(":1:Great")
-    # if(cash_yes):
-    #     logger.debug("cashe already exist")
 
     greatlist = cache.get_or_set('Great', Great.objects.all())
-    # greatlist = Great.objects.all()
     serializer = GreatlistResponse(greatlist, many=True)
     speed = time.time() -start
     speedlog = ">>>>>>>>>걸린시간>>>>>"+str(speed )
@@ -60,12 +55,12 @@ def get_greatlist(request):
 
 @api_view(['POST'])
 def get_task_id(request,user_id):
-    userId = user.objects.get(uuid = user_id).id
+    userId = Users.objects.get(uuid = user_id).id
     payload = user_token_to_data(request.headers.get('Authorization', None))
     if (payload.get('id') == str(userId)):
         picuuid = str(uuid4())
         file = request.FILES['filename']
-        userquery = user.objects.filter(uuid = user_id).values()
+        userquery = Users.objects.filter(uuid = user_id).values()
         userid = (userquery[0])['id']
         fs = FileSystemStorage(location='media', base_url='media')
         filename = fs.save(picuuid+'.png', file)
@@ -76,7 +71,7 @@ def get_task_id(request,user_id):
             s3, AWS_STORAGE_BUCKET_NAME, '/app/media/' + str(picuuid) + '.png', 'image/' + str(picuuid) + '.png')
         retGet = s3_get_image_url(s3, 'image/' + str(picuuid) + '.png') #s3 이미지 url
         # picture 정보 db에 저장
-        Picture.objects.create(user_id = user.objects.get(id=userid), picture_url = retGet, uuid = picuuid )
+        Picture.objects.create(user_id = Users.objects.get(id=userid), picture_url = retGet, uuid = picuuid )
         task = ai_task.delay(filename)
         returndata = {"task_id":task.id, "picuuid":picuuid}
         # task = ai_task.delay()
