@@ -46,7 +46,12 @@ def greatview(request):
 #전체 great 조회 
 @api_view(['GET'])
 def get_greatlist(request):
+
     start = time.time()
+    #cash_yes=cache.get(":1:Great")
+    # if(cash_yes):
+    #     logger.debug("cashe already exist")
+
     greatlist = cache.get_or_set('Great', Great.objects.all())
     # greatlist = Great.objects.all()
     serializer = GreatlistResponse(greatlist, many=True)
