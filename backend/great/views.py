@@ -46,10 +46,13 @@ def greatview(request):
 #전체 great 조회 
 @api_view(['GET'])
 def get_greatlist(request):
-    greatlist = cache.get_or_set('Great', Great.objects.all())
-    #greatlist = Great.objects.all()
+    start = time.time()
+    #greatlist = cache.get_or_set('Great', Great.objects.all())
+    greatlist = Great.objects.all()
     serializer = GreatlistResponse(greatlist, many=True)
-    logger.debug("********************************걸린 시간:")
+    speed = time.time() -start
+    speedlog = ">>>>>>>>>걸린시간>>>>>"+str(speed )
+    logger.debug(speedlog)
     return Response(serializer.data)
 
 @api_view(['POST'])
