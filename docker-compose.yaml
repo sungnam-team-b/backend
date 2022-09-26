@@ -3,6 +3,7 @@ version: "3.8"
 volumes:
   mysql_data:
   redisdata:
+  grafana_data:
 
 services:
   mysqldb:
@@ -105,4 +106,17 @@ services:
       - '--config.file=/etc/prometheus/prometheus.yml' 
       - '--web.console.templates=/etc/prometheus/consoles/'
       - '--web.console.libraries=/etc/prometheus/console_libraries/'
+    restart: always
+
+  grafana:
+    image: grafana/grafana
+    environment:
+      GF_INSTALL_PLUGINS: "grafana-clock-panel,grafana-simple-json-datasource"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    ports:
+      - 3001:3000
+    depends_on:
+      - prometheus
+    # network_mode: host
     restart: always
