@@ -16,6 +16,7 @@ services:
 
   backend:
     build: ./backend
+    container_name: backend
     command: >
       bash -c "python wait_mysql.py &&
                python manage.py makemigrations &&
