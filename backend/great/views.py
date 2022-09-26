@@ -49,7 +49,7 @@ def get_task_id(request,user_id):
         filename = fs.save(picuuid+'.png', file)
         uploaded_file_url = fs.url(filename)
         # s3 버킷에 업로드
-        # s3 = s3_connection()
+        s3 = s3_connection()
         retPut = s3_put_object(
             s3, AWS_STORAGE_BUCKET_NAME, '/app/media/' + str(picuuid) + '.png', 'image/' + str(picuuid) + '.png')
         retGet = s3_get_image_url(s3, 'image/' + str(picuuid) + '.png') #s3 이미지 url
