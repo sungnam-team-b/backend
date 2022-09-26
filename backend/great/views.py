@@ -21,6 +21,11 @@ from django.core.files.storage import FileSystemStorage
 
 from user.userUtil import user_token_to_data
 
+# redis 
+import time
+import logging
+from django.core.cache import cache
+
 
 import os, json
 from pathlib import Path
@@ -32,6 +37,9 @@ from celery.result import AsyncResult
 from PIL import Image, ImageOps
 import numpy as np
 
+
+logger = logging.getLogger(__name__)
+
 def greatview(request):
     return JsonResponse({"id" : "test"})
 
@@ -41,6 +49,7 @@ def get_greatlist(request):
     greatlist = cache.get_or_set('Great', Great.objects.all())
     #greatlist = Great.objects.all()
     serializer = GreatlistResponse(greatlist, many=True)
+    logger.debug("********************************걸린 시간:")
     return Response(serializer.data)
 
 @api_view(['POST'])
