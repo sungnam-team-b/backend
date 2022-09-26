@@ -19,6 +19,12 @@ from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 
 
+# redis 
+import time
+import logging
+from django.core.cache import cache
+
+
 import os, json
 from pathlib import Path
 from uuid import uuid4
@@ -29,11 +35,27 @@ from celery.result import AsyncResult
 from PIL import Image, ImageOps
 import numpy as np
 
+
+logger = logging.getLogger(__name__)
+
+def greatview(request):
+    return JsonResponse({"id" : "test"})
+
 #전체 great 조회 
 @api_view(['GET'])
 def get_greatlist(request):
-    greatlist = Great.objects.all()
+
+    start = time.time()
+    #cash_yes=cache.get(":1:Great")
+    # if(cash_yes):
+    #     logger.debug("cashe already exist")
+
+    greatlist = cache.get_or_set('Great', Great.objects.all())
+    # greatlist = Great.objects.all()
     serializer = GreatlistResponse(greatlist, many=True)
+    speed = time.time() -start
+    speedlog = ">>>>>>>>>걸린시간>>>>>"+str(speed )
+    logger.debug(speedlog)
     return Response(serializer.data)
 
 @api_view(['POST'])

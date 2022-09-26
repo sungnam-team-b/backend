@@ -170,3 +170,18 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = int(1e10)
 # }
 # DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'path/to/store/my/files/')
+
+#logger
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG',
+    },
+}
