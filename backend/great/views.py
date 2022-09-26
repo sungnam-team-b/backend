@@ -152,20 +152,3 @@ def mypage(request, user_id):
     else:
         return JsonResponse({"message": "Token Error"}, status=401)
     
-    # if cache.get("logindata"):
-    #     logindata = cache.get("logindata")
-
-    #     # access 토큰 확인?
-
-    #     #userId에 해당하는 result 데이터 조회
-    #     resultByUser = Result.objects.filter(userId=userId)
-    #     serializer = MyPageResponse(resultByUser, many=True)
-    #     return Response(serializer.data)
-
-        
-    # else:
-    #     return JsonResponse({"message": "access denined"}, status=401)
-    #     #로그인 데이터가 없다면
-    #     #로그인 페이지로 이동하도록
-    
-
