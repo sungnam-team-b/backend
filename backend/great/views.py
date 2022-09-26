@@ -1,25 +1,22 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from .models import Great, Picture, Result
-from user.models import user
-from user.serializers import UUIDSerializer
+from users.models import Users
+from users.serializers import UUIDSerializer
+from users.userUtil import user_token_to_data
 
-from backend.settings import AWS_STORAGE_BUCKET_NAME
-from backend.settings import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
+from backend.settings import AWS_STORAGE_BUCKET_NAME, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
 
 from .utils import s3_connection, get_ai_result, s3_get_image_url, s3_put_object, get_animal_num
-from .serializers import GreatlistResponse
+from .serializers import GreatlistResponse, MyPageResponse
 
 from rest_framework import status, viewsets
-from .serializers import GreatlistResponse, MyPageResponse
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 import requests
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
-
-from user.userUtil import user_token_to_data
 
 
 import os, json
@@ -32,9 +29,6 @@ from celery.result import AsyncResult
 from PIL import Image, ImageOps
 import numpy as np
 
-def greatview(request):
-    return JsonResponse({"id" : "test"})
-
 #전체 great 조회 
 @api_view(['GET'])
 def get_greatlist(request):
@@ -46,7 +40,7 @@ def get_greatlist(request):
 def get_task_id(request,user_id):
     picuuid = str(uuid4())
     file = request.FILES['filename']
-    userquery = user.objects.filter(uuid = user_id).values()
+    userquery = Users.objects.filter(uuid = user_id).values()
     userid = (userquery[0])['id']
     fs = FileSystemStorage(location='media', base_url='media')
     filename = fs.save(picuuid+'.png', file)
@@ -57,7 +51,7 @@ def get_task_id(request,user_id):
         s3, AWS_STORAGE_BUCKET_NAME, '/app/media/' + str(picuuid) + '.png', 'image/' + str(picuuid) + '.png')
     retGet = s3_get_image_url(s3, 'image/' + str(picuuid) + '.png') #s3 이미지 url
     #picture 정보 db에 저장
-    Picture.objects.create(user_id = user.objects.get(id=userid), picture_url = retGet, uuid = picuuid )
+    Picture.objects.create(user_id = Users.objects.get(id=userid), picture_url = retGet, uuid = picuuid )
     task = ai_task.delay(filename)
     returndata = {"task_id":task.id, "picuuid":picuuid}
     # task = ai_task.delay()
@@ -74,7 +68,7 @@ def get_task_result(request, user_id, task_id):
         return JsonResponse({"ai_result": "false"})    
     keys = list((ai_results['ai_result']).keys())
     picuuid = request.POST['picuuid']
-    ret_user_id = user.objects.filter(uuid = user_id ).values('id')
+    ret_user_id = Users.objects.filter(uuid = user_id ).values('id')
     pictureid = Picture.objects.filter(uuid = picuuid).values('id')
     #ai 결과 db에 저장
     result1 = keys[0] # 첫번쨰 key값
@@ -83,15 +77,15 @@ def get_task_result(request, user_id, task_id):
     data_convert = {k:float(v) for k,v in ai_results['ai_result'].items()}
     print(float((ai_results['ai_result'])[f'{result3}']))    
 
-    Result.objects.create(user_id = user.objects.get(id = (ret_user_id[0])['id']),\
+    Result.objects.create(user_id = Users.objects.get(id = (ret_user_id[0])['id']),\
         great_id = Great.objects.get(id = ((get_animal_num(result1))[0])['id']),\
             picture_id = Picture.objects.get(id = int((pictureid[0])['id'])),\
                 similarity = float((ai_results['ai_result'])[f'{result1}']))            
-    Result.objects.create(user_id = user.objects.get(id = (ret_user_id[0])['id']),\
+    Result.objects.create(user_id = Users.objects.get(id = (ret_user_id[0])['id']),\
         great_id = Great.objects.get(id = ((get_animal_num(result2))[0])['id']),\
             picture_id = Picture.objects.get(id = int((pictureid[0])['id'])),\
                 similarity = float((ai_results['ai_result'])[f'{result2}']))
-    Result.objects.create(user_id = user.objects.get(id = (ret_user_id[0])['id']),\
+    Result.objects.create(user_id = Users.objects.get(id = (ret_user_id[0])['id']),\
         great_id = Great.objects.get(id = ((get_animal_num(result3))[0])['id']),\
             picture_id = Picture.objects.get(id = int((pictureid[0])['id'])),\
                 similarity = float((ai_results['ai_result'])[f'{result3}']))
@@ -123,7 +117,7 @@ def ranking(request):
     a = Great.objects.get(id = x[0][0]).name
     for i in range(0,len(x)):
         alist.append(Great.objects.get(id = x[i][0]).name) #alias
-        blist.append(user.objects.get(id = x[i][1]).alias) #animalname
+        blist.append(Users.objects.get(id = x[i][1]).alias) #animalname
         clist.append(x[i][2]) #similarity
     for i in range(len(x)):
         returnrank[i] = {}
@@ -138,7 +132,7 @@ def ranking(request):
 #마이페이지 
 @api_view(['GET'])
 def mypage(request, user_id):
-    userId = user.objects.get(uuid = user_id).id
+    userId = Users.objects.get(uuid = user_id).id
     payload = user_token_to_data(request.headers.get('Authorization', None))
     if (payload.get('id') == str(userId)):
         if not Result.objects.filter(user_id=userId).exists():

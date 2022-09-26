@@ -8,12 +8,6 @@ from .serializers import UserSignupResponse
 from .userUtil import create_user, user_find_name, user_ispassword, user_get_uuid, \
     user_get_access_token, user_get_refresh_token, user_refresh_get_access, user_token_to_data, UserDuplicateCheck
 
-from .models import user
-
-def test(request):
-    return JsonResponse({"name" : "test"})
-
-
 @api_view(['GET', 'POST'])
 def user(request):
     if request.method == 'GET':

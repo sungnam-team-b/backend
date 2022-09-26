@@ -26,7 +26,7 @@ class Great(models.Model):
 
 class Picture(models.Model):
     # user_id = models.ForeignKey(user, on_delete=models.CASCADE, db_column = 'user_id')
-    user_id = models.ForeignKey( "user.user", on_delete=models.CASCADE, db_column='user_id', null=True)
+    user_id = models.ForeignKey( "users.Users", on_delete=models.CASCADE, db_column='user_id', null=True)
     picture_url = models.CharField(max_length=200,default="")
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, null=True )
     created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
@@ -46,7 +46,7 @@ class Picture(models.Model):
 
 class Result(models.Model):
     # user_id = models.ForeignKey(user, on_delete=models.CASCADE, db_column = 'user_id')
-    user_id = models.ForeignKey( "user.user", on_delete=models.CASCADE, db_column='user_id', null=True)
+    user_id = models.ForeignKey( "users.Users", on_delete=models.CASCADE, db_column='user_id', null=True)
     great_id = models.ForeignKey(Great, on_delete=models.CASCADE, db_column ='great_id', null=True, related_name='great')
     picture_id = models.ForeignKey(Picture, on_delete=models.CASCADE, db_column ='picture_id', null=True)
     similarity = models.FloatField(default=0., null=True)
