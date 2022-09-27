@@ -162,11 +162,12 @@ def ranking(request):
 def mypage(request, user_id):
 
 
-    if cache.get(resultByUser):
+    if cache.get("resultByUser"):
+        logger.debug("DATA FROM CACHE")
         print("DATA FROM CACHE")
         userId = cache.get(user_id)
         
-        resultByUser = cache.get(resultByUser)
+        resultByUser = cache.get("resultByUser")
         if not resultByUser.exists():
             return JsonResponse({userId: 'PRODUCT_DOES_NOT_EXIST'}, status=404)
     else:
@@ -174,8 +175,9 @@ def mypage(request, user_id):
             userId = Users.objects.get(uuid = user_id).id
             resultByUser = Result.objects.all().filter(user_id=userId)
             cache.set(user_id, user_id)
-            cache.set(resultByUser, resultByUser)
+            cache.set("resultByUser", resultByUser)
             print("DATA FROM DB")
+            logger.debug("DATA FROM DB")
         except Result.DoesNotExist:
             return JsonResponse({userId: 'PRODUCT_DOES_NOT_EXIST'}, status=404)
 
