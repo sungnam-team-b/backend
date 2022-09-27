@@ -160,17 +160,35 @@ def ranking(request):
 #마이페이지 
 @api_view(['GET'])
 def mypage(request, user_id):
-    userId = Users.objects.get(uuid = user_id).id
-    payload = user_token_to_data(request.headers.get('Authorization', None))
-    if (payload.get('id') == str(userId)):
-        if not Result.objects.filter(user_id=userId).exists():
-            return JsonResponse({userId: 'PRODUCT_DOES_NOT_EXIST'}, status=404)
-        
-        resultByUser = Result.objects.all().filter(user_id=userId)
-        #resultByUser = Result.objects.select_related('picture_id').select_related('great_id').filter(user_id=user.objects.get(id=userId))
-        #resultByUser = Result.objects.select_related('picture_id').filter(user_id=userId)
-        serializer = MyPageResponse(resultByUser, many=True)
-        return Response(serializer.data)
+
+    if cache.get(user_id):
+        print("DATA FROM CACHE")
+        userId = cache.get(user_id)
     else:
-        return JsonResponse({"message": "Token Error"}, status=401)
+        try:
+            user_id = Users.objects.get(uuid = user_id).id
+            resultByUser = Result.objects.all().filter(user_id=userId)
+            cache.set(user_id, user_id)
+            cache.set(resultByUser, resultByUser)
+            print("DATA FROM DB")
+        except Result.DoesNotExist:
+            return JsonResponse({userId: 'PRODUCT_DOES_NOT_EXIST'}, status=404)
+
+    serializer = MyPageResponse(resultByUser, many=True)
+    return Response(serializer.data)
+
+
+    # userId = Users.objects.get(uuid = user_id).id
+    # payload = user_token_to_data(request.headers.get('Authorization', None))
+    # if (payload.get('id') == str(userId)):
+    #     if not Result.objects.filter(user_id=userId).exists():
+    #         return JsonResponse({userId: 'PRODUCT_DOES_NOT_EXIST'}, status=404)
+        
+    #     resultByUser = Result.objects.all().filter(user_id=userId)
+    #     #resultByUser = Result.objects.select_related('picture_id').select_related('great_id').filter(user_id=user.objects.get(id=userId))
+    #     #resultByUser = Result.objects.select_related('picture_id').filter(user_id=userId)
+    #     serializer = MyPageResponse(resultByUser, many=True)
+    #     return Response(serializer.data)
+    # else:
+    #     return JsonResponse({"message": "Token Error"}, status=401)
     
