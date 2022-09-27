@@ -161,12 +161,17 @@ def ranking(request):
 @api_view(['GET'])
 def mypage(request, user_id):
 
-    if cache.get(user_id):
+
+    if cache.get(resultByUser):
         print("DATA FROM CACHE")
         userId = cache.get(user_id)
+        
+        resultByUser = cache.get(resultByUser)
+        if not resultByUser.exists():
+            return JsonResponse({userId: 'PRODUCT_DOES_NOT_EXIST'}, status=404)
     else:
         try:
-            user_id = Users.objects.get(uuid = user_id).id
+            userId = Users.objects.get(uuid = user_id).id
             resultByUser = Result.objects.all().filter(user_id=userId)
             cache.set(user_id, user_id)
             cache.set(resultByUser, resultByUser)
