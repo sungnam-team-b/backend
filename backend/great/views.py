@@ -60,12 +60,12 @@ def get_greatlist(request):
 
 @api_view(['POST'])
 def get_task_id(request,user_id):
-    userId = user.objects.get(uuid = user_id).id
+    userId = Users.objects.get(uuid = user_id).id
     payload = user_token_to_data(request.headers.get('Authorization', None))
     if (payload.get('id') == str(userId)):
         picuuid = str(uuid4())
         file = request.FILES['filename']
-        userquery = user.objects.filter(uuid = user_id).values()
+        userquery = Users.objects.filter(uuid = user_id).values()
         userid = (userquery[0])['id']
         fs = FileSystemStorage(location='media', base_url='media')
         filename = fs.save(picuuid+'.png', file)
@@ -76,7 +76,7 @@ def get_task_id(request,user_id):
             s3, AWS_STORAGE_BUCKET_NAME, '/app/media/' + str(picuuid) + '.png', 'image/' + str(picuuid) + '.png')
         retGet = s3_get_image_url(s3, 'image/' + str(picuuid) + '.png') #s3 이미지 url
         # picture 정보 db에 저장
-        Picture.objects.create(user_id = user.objects.get(id=userid), picture_url = retGet, uuid = picuuid )
+        Picture.objects.create(user_id = Users.objects.get(id=userid), picture_url = retGet, uuid = picuuid )
         task = ai_task.delay(filename)
         returndata = {"task_id":task.id, "picuuid":picuuid}
         # task = ai_task.delay()
@@ -160,30 +160,34 @@ def ranking(request):
 #마이페이지 
 @api_view(['GET'])
 def mypage(request, user_id):
+    userId = Users.objects.get(uuid = user_id).id
+    payload = user_token_to_data(request.headers.get('Authorization', None))
+    if (payload.get('id') == str(userId)):
 
+        if cache.get("resultByUser"):
+            logger.debug("DATA FROM CACHE")
+            print("DATA FROM CACHE")
+            userId = cache.get(user_id)
+            
+            resultByUser = cache.get("resultByUser")
+            if not resultByUser.exists():
+                return JsonResponse({userId: 'PRODUCT_DOES_NOT_EXIST'}, status=404)
+        else:
+            try:
 
-    if cache.get("resultByUser"):
-        logger.debug("DATA FROM CACHE")
-        print("DATA FROM CACHE")
-        userId = cache.get(user_id)
-        
-        resultByUser = cache.get("resultByUser")
-        if not resultByUser.exists():
-            return JsonResponse({userId: 'PRODUCT_DOES_NOT_EXIST'}, status=404)
+                userId = Users.objects.get(uuid = user_id).id
+                resultByUser = Result.objects.all().filter(user_id=userId)
+                cache.set(user_id, user_id)
+                cache.set("resultByUser", resultByUser)
+                print("DATA FROM DB")
+                logger.debug("DATA FROM DB")
+            except Result.DoesNotExist:
+                return JsonResponse({userId: 'PRODUCT_DOES_NOT_EXIST'}, status=404)
+
+        serializer = MyPageResponse(resultByUser, many=True)
+        return Response(serializer.data)
     else:
-        try:
-            userId = Users.objects.get(uuid = user_id).id
-            resultByUser = Result.objects.all().filter(user_id=userId)
-            cache.set(user_id, user_id)
-            cache.set("resultByUser", resultByUser)
-            print("DATA FROM DB")
-            logger.debug("DATA FROM DB")
-        except Result.DoesNotExist:
-            return JsonResponse({userId: 'PRODUCT_DOES_NOT_EXIST'}, status=404)
-
-    serializer = MyPageResponse(resultByUser, many=True)
-    return Response(serializer.data)
-
+        return JsonResponse({"message": "Token Error"}, status=401)
 
     # userId = Users.objects.get(uuid = user_id).id
     # payload = user_token_to_data(request.headers.get('Authorization', None))
