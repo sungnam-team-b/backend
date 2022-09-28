@@ -181,6 +181,8 @@ def mypage(request, user_id):
                 cache.set("resultByUser", resultByUser)
                 print("DATA FROM DB")
                 logger.debug("DATA FROM DB")
+                if not resultByUser.exists():
+                    return JsonResponse({userId: 'PRODUCT_DOES_NOT_EXIST'}, status=404)
             except Result.DoesNotExist:
                 return JsonResponse({userId: 'PRODUCT_DOES_NOT_EXIST'}, status=404)
 
