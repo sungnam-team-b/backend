@@ -1,9 +1,0 @@
-POST http://localhost:8080/v1/api/users/
-Content-Type: application/json
-
-{
-    "username": "12345",
-    "password":"hello",
-    "email" :"12345@naver.com",
-    "alias" : "hello"
-}

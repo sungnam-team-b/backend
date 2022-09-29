@@ -34,15 +34,6 @@ services:
       - redis
     links:
       - mysqldb
-  
-  nginx:
-    build: ./nginx
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx:/etc/nginx/conf.d
-    depends_on:
-      - backend
 
   redis:
     container_name: redis
@@ -82,19 +73,6 @@ services:
     command: sh -c "python wait_mysql.py &&
                     celery -A backend worker --loglevel=info"
 
-  # prometheus:
-  #   image: prom/prometheus
-  #   container_name: prometheus
-  #   volume:
-  #     - ./prometheus/:/etc/prometheus/
-  #   ports:
-  #     - 9090:9090
-  #   command:
-  #     - '--config.file=prometheus.yml' 
-  #     - '--web.console.templates consoles/'
-  #     - '--web.console.libraries ~/prometheus/console_libraries/'
-  #   restart: always
-
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
@@ -121,5 +99,4 @@ services:
       - 3001:3000
     depends_on:
       - prometheus
-    # network_mode: host
     restart: always
