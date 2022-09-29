@@ -185,18 +185,3 @@ def mypage(request, user_id):
         return Response(serializer.data)
     else:
         return JsonResponse({"message": "Token Error"}, status=401)
-
-    # userId = Users.objects.get(uuid = user_id).id
-    # payload = user_token_to_data(request.headers.get('Authorization', None))
-    # if (payload.get('id') == str(userId)):
-    #     if not Result.objects.filter(user_id=userId).exists():
-    #         return JsonResponse({userId: 'PRODUCT_DOES_NOT_EXIST'}, status=404)
-        
-    #     resultByUser = Result.objects.all().filter(user_id=userId)
-    #     #resultByUser = Result.objects.select_related('picture_id').select_related('great_id').filter(user_id=user.objects.get(id=userId))
-    #     #resultByUser = Result.objects.select_related('picture_id').filter(user_id=userId)
-    #     serializer = MyPageResponse(resultByUser, many=True)
-    #     return Response(serializer.data)
-    # else:
-    #     return JsonResponse({"message": "Token Error"}, status=401)
-    
