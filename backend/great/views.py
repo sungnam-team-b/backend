@@ -158,30 +158,44 @@ def mypage(request, user_id):
     userId = Users.objects.get(uuid = user_id).id
     payload = user_token_to_data(request.headers.get('Authorization', None))
     if (payload.get('id') == str(userId)):
-
-        if cache.get("resultByUser"):
-            logger.debug("DATA FROM CACHE")
-            print("DATA FROM CACHE")
-            userId = cache.get(user_id)
-            
-            resultByUser = cache.get("resultByUser")
-            if not resultByUser.exists():
+         userId = Users.objects.get(uuid = user_id).id
+         payload = user_token_to_data(request.headers.get('Authorization', None))
+         if (payload.get('id') == str(userId)):
+            if not Result.objects.filter(user_id=userId).exists():
                 return JsonResponse({userId: 'PRODUCT_DOES_NOT_EXIST'}, status=404)
-        else:
-            try:
-
-                userId = Users.objects.get(uuid = user_id).id
-                resultByUser = Result.objects.all().filter(user_id=userId)
-                cache.set(user_id, user_id)
-                cache.set("resultByUser", resultByUser)
-                print("DATA FROM DB")
-                logger.debug("DATA FROM DB")
-                if not resultByUser.exists():
-                    return JsonResponse({userId: 'PRODUCT_DOES_NOT_EXIST'}, status=404)
-            except Result.DoesNotExist:
-                return JsonResponse({userId: 'PRODUCT_DOES_NOT_EXIST'}, status=404)
-
-        serializer = MyPageResponse(resultByUser, many=True)
-        return Response(serializer.data)
+                
+            resultByUser = Result.objects.all().filter(user_id=userId)
+            resultByUser = Result.objects.select_related('picture_id').select_related('great_id').filter(user_id=Users.objects.get(id=userId))
+            resultByUser = Result.objects.select_related('picture_id').filter(user_id=userId)
+            serializer = MyPageResponse(resultByUser, many=True)
+            return Response(serializer.data)
     else:
         return JsonResponse({"message": "Token Error"}, status=401)
+
+
+    # if cache.get("resultByUser"):
+    #         logger.debug("DATA FROM CACHE")
+    #         print("DATA FROM CACHE")
+    #         userId = cache.get(user_id)
+            
+    #         resultByUser = cache.get("resultByUser")
+    #         if not resultByUser.exists():
+    #             return JsonResponse({userId: 'PRODUCT_DOES_NOT_EXIST'}, status=404)
+    #     else:
+    #         try:
+
+    #             userId = Users.objects.get(uuid = user_id).id
+    #             resultByUser = Result.objects.all().filter(user_id=userId)
+    #             cache.set(user_id, user_id)
+    #             cache.set("resultByUser", resultByUser)
+    #             print("DATA FROM DB")
+    #             logger.debug("DATA FROM DB")
+    #             if not resultByUser.exists():
+    #                 return JsonResponse({userId: 'PRODUCT_DOES_NOT_EXIST'}, status=404)
+    #         except Result.DoesNotExist:
+    #             return JsonResponse({userId: 'PRODUCT_DOES_NOT_EXIST'}, status=404)
+
+    #     serializer = MyPageResponse(resultByUser, many=True)
+    #     return Response(serializer.data)
+    # else:
+    #     return JsonResponse({"message": "Token Error"}, status=401)
